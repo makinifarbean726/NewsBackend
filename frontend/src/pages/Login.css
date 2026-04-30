@@ -1,0 +1,99 @@
+/* Color Palette from NationScope Poster */
+:root {
+  --navy: #001144;
+  --red: #e31b23;
+  --white: #ffffff;
+  --blue: #4d91ff;
+  --off-white: #f4f4f4;
+}
+
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--navy);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.login-card {
+  background-color: var(--white);
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.brand-name {
+  color: var(--navy);
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.brand-name span {
+  color: var(--red);
+}
+
+.brand-motto {
+  color: var(--navy);
+  font-style: italic;
+  font-size: 0.85rem;
+  margin-bottom: 20px;
+  border-bottom: 2px solid var(--navy);
+  display: inline-block;
+  padding-bottom: 5px;
+}
+
+.login-title {
+  color: #333;
+  margin-bottom: 25px;
+  font-weight: 600;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.login-input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+}
+
+.login-input:focus {
+  outline: none;
+  border-color: var(--blue);
+  box-shadow: 0 0 5px rgba(77, 145, 255, 0.3);
+}
+
+.login-button {
+  background-color: var(--red);
+  color: var(--white);
+  padding: 12px;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+  text-transform: uppercase;
+  margin-top: 10px;
+}
+
+.login-button:hover {
+  background-color: #c4161d;
+}
+
+.login-button:active {
+  transform: scale(0.98);
+}

@@ -1,0 +1,143 @@
+.article-page-container {
+  max-width: 850px;
+  margin: 0 auto;
+  padding: 60px 20px;
+  background-color: #ffffff;
+  min-height: 100vh;
+}
+
+/* Header Styling */
+.article-header {
+  margin-bottom: 40px;
+  text-align: left;
+}
+
+.category-badge {
+  background-color: #e31b23; /* NationScope Red */
+  color: white;
+  display: inline-block;
+  padding: 4px 12px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 15px;
+}
+
+.article-main-title {
+  font-family: 'Georgia', serif;
+  color: #001144; /* NationScope Navy */
+  font-size: 2.8rem;
+  line-height: 1.1;
+  margin: 0 0 20px 0;
+  font-weight: 800;
+}
+
+.article-author-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0;
+  border-top: 1px solid #eee;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.header-decoration {
+  display: flex;
+  height: 4px;
+  margin-top: 10px;
+}
+
+.line-red { background-color: #e31b23; flex: 1; }
+.line-blue { background-color: #4d91ff; flex: 2; }
+
+/* Content/Body Styling */
+.article-body-wrapper {
+  line-height: 1.8;
+  font-family: 'Inter', sans-serif;
+  color: #333;
+}
+
+.article-rich-content {
+  font-size: 1.15rem;
+}
+
+.article-rich-content p {
+  margin-bottom: 25px;
+}
+
+/* Style for potential images/videos inside dangerouslySetInnerHTML */
+.article-rich-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+  margin: 20px 0;
+}
+
+/* Article Footer */
+.article-end-meta {
+  margin-top: 50px;
+  padding-top: 30px;
+  border-top: 2px solid #001144;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.share-btn {
+  background-color: #001144;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  width: fit-content;
+  font-weight: bold;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.share-btn:hover {
+  opacity: 0.9;
+}
+
+.article-tags {
+  display: flex;
+  gap: 15px;
+  color: #4d91ff; /* NationScope Blue */
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* Loading/States */
+.article-loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 100px;
+}
+
+.article-loader {
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #e31b23;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@media (max-width: 768px) {
+  .article-main-title {
+    font-size: 2rem;
+  }
+  
+  .article-author-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}
