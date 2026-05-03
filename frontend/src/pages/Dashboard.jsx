@@ -1,47 +1,76 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import api from "../api/axios";
 
 function Dashboard() {
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
   const [content, setContent] = useState("");
+
   const [file, setFile] = useState(null);
+  const [existingArticleId, setExistingArticleId] = useState("");
+
+  // =========================
+  // NEW: categories state
+  // =========================
+  const [categories, setCategories] = useState([]);
+  const [categoryId, setCategoryId] = useState("");
+
+  const token = localStorage.getItem("token");
+
+  // =========================
+  // FETCH CATEGORIES
+  // =========================
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await api.get("/categories");
+        setCategories(res.data);
+      } catch (err) {
+        console.error("Failed to load categories", err);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   const handleCreate = async (e) => {
     e.preventDefault();
 
-    const token = localStorage.getItem("token");
-
     if (!token) {
-      alert("No token found. Please login again.");
+      alert("Login required");
       return;
     }
 
     try {
+      let articleId = existingArticleId;
+
       // =========================
-      // 1. CREATE ARTICLE FIRST
+      // CREATE ARTICLE
       // =========================
-      const articleRes = await api.post(
-        "/articles",
-        {
-          title,
-          slug,
-          content,
-          status: "published",
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
+      if (!existingArticleId) {
+        const articleRes = await api.post(
+          "/articles",
+          {
+            title,
+            slug,
+            content,
+            category_id: categoryId || null, // ✅ NEW
+            status: "published",
           },
-        }
-      );
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
-      const articleId = articleRes.data.id;
+        articleId = articleRes.data.article_id;
 
-      console.log("Article created:", articleRes.data);
+        console.log("Article created:", articleRes.data);
+      }
 
       // =========================
-      // 2. UPLOAD MEDIA (IF ANY)
+      // UPLOAD MEDIA
       // =========================
       if (file) {
         const formData = new FormData();
@@ -52,24 +81,25 @@ function Dashboard() {
         const mediaRes = await api.post("/media/upload", formData, {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
           },
         });
 
         console.log("Media uploaded:", mediaRes.data);
       }
 
-      alert("Article created successfully!");
-      
-      // reset form
+      alert("Success!");
+
+      // reset
       setTitle("");
       setSlug("");
       setContent("");
       setFile(null);
+      setExistingArticleId("");
+      setCategoryId("");
 
     } catch (err) {
-      console.error("Error:", err);
-      alert("Failed to create article");
+      console.error(err.response?.data || err);
+      alert("Failed");
     }
   };
 
@@ -78,52 +108,63 @@ function Dashboard() {
       <h1>Admin Dashboard</h1>
 
       <form onSubmit={handleCreate}>
-        {/* TITLE */}
+        <h3>Create New Article</h3>
+
         <input
           placeholder="Title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          style={{ width: "100%", padding: "10px", marginBottom: "10px" }}
         />
+        <br /><br />
 
-        {/* SLUG */}
         <input
           placeholder="Slug"
           value={slug}
           onChange={(e) => setSlug(e.target.value)}
-          style={{ width: "100%", padding: "10px", marginBottom: "10px" }}
         />
+        <br /><br />
 
-        {/* CONTENT */}
         <textarea
           placeholder="Content"
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          rows="6"
-          style={{ width: "100%", padding: "10px", marginBottom: "10px" }}
         />
+        <br /><br />
 
-        {/* FILE UPLOAD */}
+        {/* =========================
+            CATEGORY SELECT DROPDOWN
+        ========================= */}
+        <select
+          value={categoryId}
+          onChange={(e) => setCategoryId(e.target.value)}
+        >
+          <option value="">Select Category</option>
+
+          {categories.map((cat) => (
+            <option key={cat.id} value={cat.id}>
+              {cat.name}
+            </option>
+          ))}
+        </select>
+
+        <br /><br />
+
+        <h3>OR Attach Media to Existing Article</h3>
+
+        <input
+          placeholder="Existing Article ID (optional)"
+          value={existingArticleId}
+          onChange={(e) => setExistingArticleId(e.target.value)}
+        />
+        <br /><br />
+
         <input
           type="file"
           onChange={(e) => setFile(e.target.files[0])}
-          style={{ marginBottom: "15px" }}
         />
+        <br /><br />
 
-        <br />
-
-        <button
-          type="submit"
-          style={{
-            padding: "10px 20px",
-            background: "black",
-            color: "white",
-            border: "none",
-            cursor: "pointer",
-          }}
-        >
-          Create Article
-        </button>
+        <button type="submit">Submit</button>
       </form>
     </div>
   );

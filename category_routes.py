@@ -45,7 +45,7 @@ def create_category():
 # =========================
 # GET ALL CATEGORIES (PUBLIC)
 # =========================
-@category_bp.route("/", methods=["GET"])
+@category_bp.route("", methods=["GET"])
 def get_categories():
     categories = Category.query.all()
 

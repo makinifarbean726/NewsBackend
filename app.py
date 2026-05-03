@@ -10,7 +10,7 @@ from article_routes import article_bp
 from media_routes import media_bp
 from comment_routes import comment_bp
 from category_routes import category_bp
-
+from message_routes import message_bp
 
 # =========================
 # LOAD ENV FIRST
@@ -62,6 +62,7 @@ app.register_blueprint(article_bp)
 app.register_blueprint(media_bp)
 app.register_blueprint(comment_bp)
 app.register_blueprint(category_bp)
+app.register_blueprint(message_bp)
 
 
 # =========================

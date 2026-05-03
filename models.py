@@ -15,9 +15,22 @@ class User(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     # relationships
-    articles = db.relationship(
-        "Article",
-        backref="author",
+    articles = db.relationship("Article", backref="author", lazy=True, cascade="all, delete-orphan")
+
+    comments = db.relationship("Comment", backref="user", lazy=True, cascade="all, delete-orphan")
+
+    sent_messages = db.relationship(
+        "Message",
+        foreign_keys="Message.sender_id",
+        backref="sender",
+        lazy=True,
+        cascade="all, delete-orphan"
+    )
+
+    received_messages = db.relationship(
+        "Message",
+        foreign_keys="Message.receiver_id",
+        backref="receiver",
         lazy=True,
         cascade="all, delete-orphan"
     )
@@ -31,7 +44,6 @@ class Category(db.Model):
     name = db.Column(db.String(100), unique=True, nullable=False)
     slug = db.Column(db.String(120), unique=True, nullable=False)
 
-    # relationship
     articles = db.relationship("Article", backref="category", lazy=True)
 
 
@@ -49,22 +61,14 @@ class Article(db.Model):
     author_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     category_id = db.Column(db.Integer, db.ForeignKey("categories.id"))
 
+    views = db.Column(db.Integer, default=0)
+
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     # relationships
-    media = db.relationship(
-        "Media",
-        backref="article",
-        lazy=True,
-        cascade="all, delete-orphan"
-    )
+    media = db.relationship("Media", backref="article", lazy=True, cascade="all, delete-orphan")
 
-    comments = db.relationship(
-        "Comment",
-        backref="article",
-        lazy=True,
-        cascade="all, delete-orphan"
-    )
+    comments = db.relationship("Comment", backref="article", lazy=True, cascade="all, delete-orphan")
 
 
 # ================= MEDIA =================
@@ -86,10 +90,23 @@ class Comment(db.Model):
     __tablename__ = "comments"
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100))
-    email = db.Column(db.String(120))
-    message = db.Column(db.Text)
+    content = db.Column(db.Text, nullable=False)
 
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     article_id = db.Column(db.Integer, db.ForeignKey("articles.id"), nullable=False)
+
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+
+# ================= MESSAGE =================
+class Message(db.Model):
+    __tablename__ = "messages"
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    sender_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    receiver_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+
+    content = db.Column(db.Text, nullable=False)
 
     created_at = db.Column(db.DateTime, default=datetime.utcnow)

@@ -6,6 +6,9 @@ import Article from "./pages/Article";
 import Footer from "./components/Footer";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import Sidebar from "./components/Sidebar";
+import MessageSender from "./components/MessageSender";
+import Messages from "./components/Messages";
+import CategoryPage from "./pages/CategoryPage";
 
 function App() {
   return (
@@ -35,6 +38,9 @@ function App() {
         />
 
         <Route path="/article/:slug" element={<Article />} />
+        <Route path="/msg" element={<MessageSender />} />
+        <Route path="/msgg" element={<Messages />} />
+        <Route path="/category/:slug" element={<CategoryPage />} />
       </Routes>
 
       {/* FOOTER (always visible) */}

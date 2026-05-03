@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt
 
 from extensions import db
-from models import Article
+from models import Article, Media
 
 article_bp = Blueprint("articles", __name__, url_prefix="/api/articles")
 
@@ -52,21 +52,45 @@ def create_article():
 # =========================
 @article_bp.route("", methods=["GET"])
 def get_articles():
-    articles = Article.query.filter_by(status="published").order_by(
-        Article.created_at.desc()
-    ).all()
+    articles = Article.query.filter_by(status="published")\
+        .order_by(Article.created_at.desc())\
+        .all()
 
-    return jsonify([
-        {
+    result = []
+
+    for a in articles:
+        result.append({
             "id": a.id,
             "title": a.title,
             "slug": a.slug,
             "content": a.content,
-            "created_at": a.created_at
-        }
-        for a in articles
-    ])
+            "views": a.views,
+            "created_at": a.created_at,
 
+            # =========================
+            # CATEGORY (NEW)
+            # =========================
+            "category": {
+                "id": a.category.id,
+                "name": a.category.name,
+                "slug": a.category.slug
+            } if a.category else None,
+
+            # =========================
+            # MEDIA (USING RELATIONSHIP)
+            # =========================
+            "media": [
+                {
+                    "id": m.id,
+                    "file_url": m.file_url,
+                    "file_type": m.file_type,
+                    "title": m.title
+                }
+                for m in a.media
+            ]
+        })
+
+    return jsonify(result)
 
 # =========================
 # GET SINGLE ARTICLE
@@ -78,15 +102,41 @@ def get_article(slug):
     if not article:
         return jsonify({"error": "Not found"}), 404
 
+    # increment views
+    article.views += 1
+    db.session.commit()
+
     return jsonify({
         "id": article.id,
         "title": article.title,
         "slug": article.slug,
         "content": article.content,
-        "author_id": article.author_id,
-        "created_at": article.created_at
-    })
+        "views": article.views,
+        "comment_count": len(article.comments),
+        "created_at": article.created_at,
 
+        # =========================
+        # CATEGORY (NEW)
+        # =========================
+        "category": {
+            "id": article.category.id,
+            "name": article.category.name,
+            "slug": article.category.slug
+        } if article.category else None,
+
+        # =========================
+        # MEDIA (NEW)
+        # =========================
+        "media": [
+            {
+                "id": m.id,
+                "file_url": m.file_url,
+                "file_type": m.file_type,
+                "title": m.title
+            }
+            for m in article.media
+        ]
+    })
 
 # =========================
 # UPDATE ARTICLE

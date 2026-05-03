@@ -1,99 +1,105 @@
-/* Color Palette from NationScope Poster */
 :root {
-  --navy: #001144;
-  --red: #e31b23;
+  --primary-dark: #1a2a3a;    /* Deep Slate/Navy */
+  --accent-color: #d4af37;    /* Gold/Accent color */
+  --text-main: #2c3e50;
+  --bg-light: #f8f9fa;
   --white: #ffffff;
-  --blue: #4d91ff;
-  --off-white: #f4f4f4;
 }
 
-.login-container {
-  min-height: 100vh;
+.login-wrapper {
   display: flex;
-  align-items: center;
   justify-content: center;
-  background-color: var(--navy);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  align-items: center;
+  min-height: 100vh;
+  background-color: var(--bg-light);
+  font-family: 'Inter', system-ui, sans-serif;
 }
 
 .login-card {
-  background-color: var(--white);
-  padding: 40px;
+  background: var(--white);
+  padding: 3rem;
   border-radius: 8px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 400px;
+  max-width: 420px;
+  border-top: 5px solid var(--primary-dark); /* Thematic top border */
+}
+
+.login-header {
   text-align: center;
+  margin-bottom: 2rem;
 }
 
 .brand-name {
-  color: var(--navy);
-  margin: 0;
-  font-size: 2rem;
+  font-size: 2.2rem;
   font-weight: 800;
-  text-transform: uppercase;
+  color: var(--primary-dark);
+  letter-spacing: -1px;
+  margin: 0;
 }
 
 .brand-name span {
-  color: var(--red);
+  color: var(--accent-color);
 }
 
-.brand-motto {
-  color: var(--navy);
-  font-style: italic;
-  font-size: 0.85rem;
-  margin-bottom: 20px;
-  border-bottom: 2px solid var(--navy);
-  display: inline-block;
-  padding-bottom: 5px;
-}
-
-.login-title {
-  color: #333;
-  margin-bottom: 25px;
-  font-weight: 600;
+.login-subtitle {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .login-form {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 1.5rem;
 }
 
-.login-input {
-  width: 100%;
-  padding: 12px 15px;
-  border: 1px solid #ccc;
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.form-input {
+  padding: 0.8rem 1rem;
+  border: 1.5px solid #e0e0e0;
   border-radius: 4px;
   font-size: 1rem;
-  box-sizing: border-box;
-  transition: border-color 0.3s ease;
+  transition: all 0.2s ease;
 }
 
-.login-input:focus {
+.form-input:focus {
   outline: none;
-  border-color: var(--blue);
-  box-shadow: 0 0 5px rgba(77, 145, 255, 0.3);
+  border-color: var(--primary-dark);
+  box-shadow: 0 0 0 3px rgba(26, 42, 58, 0.1);
 }
 
-.login-button {
-  background-color: var(--red);
+.btn-submit {
+  margin-top: 1rem;
+  background-color: var(--primary-dark);
   color: var(--white);
-  padding: 12px;
+  padding: 1rem;
   border: none;
   border-radius: 4px;
   font-size: 1rem;
-  font-weight: bold;
+  font-weight: 700;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.1s ease;
-  text-transform: uppercase;
-  margin-top: 10px;
+  transition: background 0.3s ease;
 }
 
-.login-button:hover {
-  background-color: #c4161d;
+.btn-submit:hover {
+  background-color: #2c3e50;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.login-button:active {
-  transform: scale(0.98);
+.btn-submit:active {
+  transform: translateY(1px);
 }

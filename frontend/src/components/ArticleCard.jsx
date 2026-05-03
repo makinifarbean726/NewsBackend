@@ -1,51 +1,47 @@
 import { Link } from "react-router-dom";
 import "./ArticleCard.css";
 
-// default image (your local asset)
+// default image
 import defaultImage from "../assets/WhatsApp Image 2026-04-28 at 10.50.40.jpeg";
 
-function ArticleCard({ article }) {
+const BASE_URL = "http://127.0.0.1:5000";
 
-  const media = article.media?.[0]; // will work later when backend supports it
+function ArticleCard({ article, isAdmin }) {
+  const media = article.media?.[0];
 
   const renderMedia = () => {
-    // ✅ fallback when no media exists
     if (!media) {
       return (
         <img
           className="article-media-element"
           src={defaultImage}
-          alt="default article"
+          alt="default"
         />
       );
     }
 
-    // VIDEO
-    if (media.file_type === "mp4" || media.file_type === "video") {
+    const fullUrl = `${BASE_URL}${media.file_url}`;
+
+    // 🎥 VIDEO
+    if (["mp4", "webm"].includes(media.file_type)) {
       return (
-        <video className="article-media-element" muted>
-          <source src={media.file_url} />
+        <video className="article-media-element" controls muted>
+          <source src={fullUrl} type={`video/${media.file_type}`} />
         </video>
       );
     }
 
-    // IMAGE
-    if (
-      media.file_type === "jpg" ||
-      media.file_type === "jpeg" ||
-      media.file_type === "png" ||
-      media.file_type === "image"
-    ) {
+    // 🖼 IMAGE
+    if (["jpg", "jpeg", "png", "gif"].includes(media.file_type)) {
       return (
         <img
           className="article-media-element"
-          src={media.file_url}
-          alt={media.title || "article image"}
+          src={fullUrl}
+          alt={media.title || "article"}
         />
       );
     }
 
-    // fallback for unknown types
     return (
       <img
         className="article-media-element"
@@ -63,7 +59,6 @@ function ArticleCard({ article }) {
 
   return (
     <Link to={`/article/${article.slug}`} className="article-card-link">
-
       <div className="article-card-container">
 
         {/* MEDIA */}
@@ -75,6 +70,13 @@ function ArticleCard({ article }) {
         <div className="article-content-body">
           <h2 className="article-card-title">{article.title}</h2>
 
+          {/* CATEGORY (optional but useful now that you have it) */}
+          {article.category && (
+            <p className="article-category">
+              {article.category.name}
+            </p>
+          )}
+
           <p className="article-card-excerpt">
             {getExcerpt(article.content)}
           </p>
@@ -83,12 +85,19 @@ function ArticleCard({ article }) {
             <span className="article-date">
               {new Date(article.created_at).toLocaleDateString()}
             </span>
+
+            {/* 🔥 ADMIN ONLY VIEWS */}
+            {isAdmin && article.views !== undefined && (
+              <span className="article-views">
+                👁 {article.views}
+              </span>
+            )}
+
             <span className="read-more-label">Read Full Story →</span>
           </div>
         </div>
 
         <div className="article-card-accent-bar"></div>
-
       </div>
     </Link>
   );

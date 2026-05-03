@@ -1,128 +1,194 @@
+/* 1. LAYOUT & CONTAINER */
 .article-page-container {
-  max-width: 850px;
-  margin: 0 auto;
-  padding: 60px 20px;
-  background-color: #ffffff;
-  min-height: 100vh;
+  max-width: 850px; /* Standard editorial reading width */
+  margin: 40px auto;
+  padding: 0 20px;
+  background-color: var(--ns-white);
+  font-family: var(--font-main);
+  line-height: 1.6;
+  color: var(--ns-gray-text);
 }
 
-/* Header Styling */
+/* 2. HEADER & TYPOGRAPHY */
 .article-header {
+  text-align: center;
   margin-bottom: 40px;
-  text-align: left;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 30px;
 }
 
 .category-badge {
-  background-color: #e31b23; /* NationScope Red */
-  color: white;
   display: inline-block;
+  background-color: var(--ns-red);
+  color: white;
   padding: 4px 12px;
   font-size: 0.75rem;
-  font-weight: bold;
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 1px;
   margin-bottom: 15px;
 }
 
 .article-main-title {
-  font-family: 'Georgia', serif;
-  color: #001144; /* NationScope Navy */
-  font-size: 2.8rem;
+  font-family: var(--font-header); /* Georgia/Serif */
+  font-size: 3rem;
+  color: var(--ns-navy);
+  margin: 10px 0 20px 0;
   line-height: 1.1;
-  margin: 0 0 20px 0;
-  font-weight: 800;
+  font-weight: 900;
 }
 
 .article-author-meta {
+  color: var(--ns-navy);
+  font-size: 1rem;
+  margin-bottom: 5px;
+}
+
+.article-meta-extra {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 0;
-  border-top: 1px solid #eee;
-  font-size: 0.9rem;
-  color: #666;
+  justify-content: center;
+  gap: 20px;
+  color: #888;
+  font-size: 0.85rem;
+  font-weight: 500;
 }
 
-.header-decoration {
-  display: flex;
-  height: 4px;
-  margin-top: 10px;
+/* 3. MEDIA (Images & Video) */
+.article-media-container {
+  margin: 0 -20px 40px -20px; /* Slight bleed on mobile */
+  box-shadow: var(--shadow-bold);
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-.line-red { background-color: #e31b23; flex: 1; }
-.line-blue { background-color: #4d91ff; flex: 2; }
-
-/* Content/Body Styling */
-.article-body-wrapper {
-  line-height: 1.8;
-  font-family: 'Inter', sans-serif;
-  color: #333;
+.article-main-media {
+  width: 100%;
+  display: block;
+  max-height: 550px;
+  object-fit: cover;
+  background-color: #000;
 }
 
+/* 4. CONTENT AREA */
 .article-rich-content {
   font-size: 1.15rem;
+  line-height: 1.8;
+  color: #2c3e50;
 }
 
+/* Target HTML elements coming from dangerouslySetInnerHTML */
 .article-rich-content p {
+  margin-bottom: 1.5rem;
+}
+
+.article-rich-content h2, 
+.article-rich-content h3 {
+  color: var(--ns-navy);
+  font-family: var(--font-header);
+  margin-top: 2rem;
+}
+
+/* 5. COMMENTS SECTION */
+.comments-section {
+  margin-top: 60px;
+  padding-top: 40px;
+  border-top: 4px solid var(--ns-navy);
+}
+
+.comments-section h2 {
+  font-family: var(--font-header);
+  color: var(--ns-navy);
   margin-bottom: 25px;
 }
 
-/* Style for potential images/videos inside dangerouslySetInnerHTML */
-.article-rich-content img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 4px;
-  margin: 20px 0;
+.comment-box {
+  background: var(--ns-gray-bg);
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 40px;
 }
 
-/* Article Footer */
+.comment-box textarea {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-family: var(--font-main);
+  font-size: 1rem;
+  resize: vertical;
+  box-sizing: border-box;
+  margin-bottom: 15px;
+}
+
+.comment-box button {
+  background-color: var(--ns-navy);
+  color: white;
+  padding: 10px 25px;
+  border: none;
+  border-radius: 4px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.comment-box button:hover {
+  background-color: var(--ns-red);
+}
+
+.comment-box button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 6. COMMENTS LIST */
+.comment-item {
+  padding: 20px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.comment-item p {
+  margin: 0 0 10px 0;
+  font-size: 1rem;
+}
+
+.comment-item small {
+  color: #999;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+/* 7. FOOTER & LOADING */
 .article-end-meta {
   margin-top: 50px;
-  padding-top: 30px;
-  border-top: 2px solid #001144;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.share-btn {
-  background-color: #001144;
-  color: white;
-  border: none;
-  padding: 12px 25px;
-  width: fit-content;
-  font-weight: bold;
-  cursor: pointer;
-  transition: opacity 0.2s;
-}
-
-.share-btn:hover {
-  opacity: 0.9;
-}
-
-.article-tags {
+  padding: 20px 0;
   display: flex;
   gap: 15px;
-  color: #4d91ff; /* NationScope Blue */
-  font-weight: 600;
+  border-top: 1px solid #eee;
+}
+
+.article-end-meta span {
+  color: var(--ns-blue);
+  font-weight: 700;
   font-size: 0.9rem;
 }
 
-/* Loading/States */
 .article-loading-container {
+  height: 60vh;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
-  padding: 100px;
+  color: var(--ns-navy);
 }
 
 .article-loader {
-  border: 5px solid #f3f3f3;
-  border-top: 5px solid #e31b23;
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid var(--ns-red);
   border-radius: 50%;
-  width: 50px;
-  height: 50px;
   animation: spin 1s linear infinite;
+  margin-bottom: 15px;
 }
 
 @keyframes spin {
@@ -130,14 +196,13 @@
   100% { transform: rotate(360deg); }
 }
 
+/* RESPONSIVE */
 @media (max-width: 768px) {
   .article-main-title {
-    font-size: 2rem;
+    font-size: 2.2rem;
   }
-  
-  .article-author-meta {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
+  .article-page-container {
+    padding: 0 15px;
+    margin-top: 20px;
   }
 }

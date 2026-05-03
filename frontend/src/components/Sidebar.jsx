@@ -1,23 +1,47 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import api from "../api/axios";
 import "./Sidebar.css";
 
 function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [categories, setCategories] = useState([]);
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
 
-  const categories = [
-    { name: "Politics", icon: "🏛️" },
-    { name: "Business", icon: "📈" },
-    { name: "Technology", icon: "💻" },
-    { name: "Sports", icon: "⚽" },
-    { name: "Entertainment", icon: "🎬" },
-    { name: "Health", icon: "🏥" },
-    { name: "Environment", icon: "🌱" },
-  ];
+  // =========================
+  // FETCH CATEGORIES FROM BACKEND
+  // =========================
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await api.get("/categories"); // ✅ public route
+        setCategories(res.data);
+      } catch (err) {
+        console.error("Failed to load categories", err);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  // Optional: simple icon mapping
+  const getIcon = (name) => {
+    const map = {
+      politics: "🏛️",
+      business: "📈",
+      technology: "💻",
+      sports: "⚽",
+      entertainment: "🎬",
+      health: "🏥",
+      environment: "🌱",
+      science: "🔬",
+    };
+
+    return map[name.toLowerCase()] || "📰";
+  };
 
   return (
     <>
@@ -33,16 +57,22 @@ function Sidebar() {
         </div>
       </nav>
 
-      {/* DYNAMIC SIDEBAR */}
+      {/* SIDEBAR */}
       <aside className={`sidebar ${isOpen ? "open" : "collapsed"}`}>
         <div className="sidebar-content">
+          
+          {/* =========================
+              CATEGORIES (DYNAMIC)
+          ========================= */}
           <div className="sidebar-section">
             <p className="section-label">Categories</p>
             <ul className="sidebar-list">
               {categories.map((cat) => (
-                <li key={cat.name} className="sidebar-item">
-                  <Link to={`/category/${cat.name.toLowerCase()}`}>
-                    <span className="item-icon">{cat.icon}</span>
+                <li key={cat.id} className="sidebar-item">
+                  <Link to={`/category/${cat.slug}`}>
+                    <span className="item-icon">
+                      {getIcon(cat.name)}
+                    </span>
                     <span className="item-text">{cat.name}</span>
                   </Link>
                 </li>
@@ -50,6 +80,9 @@ function Sidebar() {
             </ul>
           </div>
 
+          {/* =========================
+              STATIC LIBRARY
+          ========================= */}
           <div className="sidebar-section">
             <p className="section-label">Library</p>
             <ul className="sidebar-list">
@@ -73,12 +106,14 @@ function Sidebar() {
               </li>
             </ul>
           </div>
+
         </div>
-        
       </aside>
-      
-      {/* OVERLAY for mobile/small screens when menu is forced open */}
-      {isOpen && <div className="sidebar-overlay" onClick={toggleSidebar}></div>}
+
+      {/* OVERLAY */}
+      {isOpen && (
+        <div className="sidebar-overlay" onClick={toggleSidebar}></div>
+      )}
     </>
   );
 }
