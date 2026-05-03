@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt
+import re
 
 from extensions import db
 from models import Category
@@ -7,9 +8,25 @@ from models import Category
 category_bp = Blueprint("categories", __name__, url_prefix="/api/categories")
 
 
-# =========================
-# CREATE CATEGORY (ADMIN ONLY)
-# =========================
+def generate_slug(name):
+    slug = name.lower()
+    slug = re.sub(r"[^\w\s-]", "", slug)
+    slug = re.sub(r"\s+", "-", slug)
+    return slug.strip("-")
+
+
+def unique_slug(name):
+    base = generate_slug(name)
+    slug = base
+    count = 1
+
+    while Category.query.filter_by(slug=slug).first():
+        slug = f"{base}-{count}"
+        count += 1
+
+    return slug
+
+
 @category_bp.route("/", methods=["POST"])
 @jwt_required()
 def create_category():
@@ -18,19 +35,18 @@ def create_category():
     if claims.get("role") != "admin":
         return jsonify({"error": "Forbidden"}), 403
 
-    data = request.get_json()
+    data = request.get_json() or request.form
 
-    if not data.get("name") or not data.get("slug"):
-        return jsonify({"error": "name and slug required"}), 400
+    name = data.get("name")
 
-    # prevent duplicates
-    existing = Category.query.filter_by(slug=data.get("slug")).first()
-    if existing:
-        return jsonify({"error": "Category already exists"}), 400
+    if not name:
+        return jsonify({"error": "name required"}), 400
+
+    slug = unique_slug(name)
 
     category = Category(
-        name=data.get("name"),
-        slug=data.get("slug")
+        name=name,
+        slug=slug
     )
 
     db.session.add(category)
@@ -38,13 +54,11 @@ def create_category():
 
     return jsonify({
         "message": "Category created",
-        "category_id": category.id
+        "category_id": category.id,
+        "slug": category.slug
     }), 201
 
 
-# =========================
-# GET ALL CATEGORIES (PUBLIC)
-# =========================
 @category_bp.route("", methods=["GET"])
 def get_categories():
     categories = Category.query.all()
@@ -53,15 +67,20 @@ def get_categories():
         {
             "id": c.id,
             "name": c.name,
-            "slug": c.slug
+            "slug": c.slug,
+            "articles": [
+                {
+                    "id": a.id,
+                    "title": a.title,
+                    "slug": a.slug
+                }
+                for a in c.articles
+            ]
         }
         for c in categories
     ])
 
 
-# =========================
-# GET SINGLE CATEGORY
-# =========================
 @category_bp.route("/<string:slug>", methods=["GET"])
 def get_category(slug):
     category = Category.query.filter_by(slug=slug).first()
@@ -72,13 +91,18 @@ def get_category(slug):
     return jsonify({
         "id": category.id,
         "name": category.name,
-        "slug": category.slug
+        "slug": category.slug,
+        "articles": [
+            {
+                "id": a.id,
+                "title": a.title,
+                "slug": a.slug
+            }
+            for a in category.articles
+        ]
     })
 
 
-# =========================
-# UPDATE CATEGORY (ADMIN ONLY)
-# =========================
 @category_bp.route("/<int:id>", methods=["PUT"])
 @jwt_required()
 def update_category(id):
@@ -92,19 +116,17 @@ def update_category(id):
     if not category:
         return jsonify({"error": "Not found"}), 404
 
-    data = request.get_json()
+    data = request.get_json() or request.form
 
-    category.name = data.get("name", category.name)
-    category.slug = data.get("slug", category.slug)
+    if "name" in data:
+        category.name = data["name"]
+        category.slug = unique_slug(data["name"])
 
     db.session.commit()
 
     return jsonify({"message": "Category updated"})
 
 
-# =========================
-# DELETE CATEGORY (ADMIN ONLY)
-# =========================
 @category_bp.route("/<int:id>", methods=["DELETE"])
 @jwt_required()
 def delete_category(id):

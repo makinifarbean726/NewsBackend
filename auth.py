@@ -33,6 +33,7 @@ def register():
     db.session.commit()
 
     return jsonify({"message": "User created"}), 201
+
 #Login
 @auth_bp.route("/login", methods=["POST"])
 def login():
@@ -44,7 +45,7 @@ def login():
         return jsonify({"error": "Invalid credentials"}), 401
 
     token = create_access_token(
-        identity=str(user.id),   # 🔥 FIX HERE
+        identity=str(user.id),
         additional_claims={"role": user.role}
     )
 

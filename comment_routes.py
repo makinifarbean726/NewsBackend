@@ -1,27 +1,26 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt
-from datetime import datetime
 
 from extensions import db
-from models import Comment, Article
+from models import Comment
 
 comment_bp = Blueprint("comments", __name__, url_prefix="/api/comments")
 
 
-# =========================
-# ADD COMMENT (PUBLIC)
-# =========================
-# CREATE COMMENT
 @comment_bp.route("", methods=["POST"])
-@jwt_required()
 def create_comment():
-    user_id = get_jwt()["sub"]
-    data = request.get_json()
+    data = request.get_json() or request.form
+
+    content = data.get("content")
+    article_id = data.get("article_id")
+
+    if not content or not article_id:
+        return jsonify({"error": "content and article_id required"}), 400
 
     comment = Comment(
-        content=data["content"],
-        user_id=user_id,
-        article_id=data["article_id"]
+        content=content,
+        article_id=article_id,
+        user_id=None
     )
 
     db.session.add(comment)
@@ -30,10 +29,15 @@ def create_comment():
     return jsonify({"message": "Comment added"}), 201
 
 
-# GET COMMENTS FOR ARTICLE
 @comment_bp.route("/article/<int:article_id>", methods=["GET"])
+@jwt_required()
 def get_comments(article_id):
-    comments = Comment.query.filter_by(article_id=article_id).all()
+    claims = get_jwt()
+
+    if claims.get("role") != "admin":
+        return jsonify({"error": "Forbidden"}), 403
+
+    comments = Comment.query.filter_by(article_id=article_id).order_by(Comment.created_at.desc()).all()
 
     return jsonify([
         {
@@ -43,3 +47,22 @@ def get_comments(article_id):
         }
         for c in comments
     ])
+
+
+@comment_bp.route("/<int:id>", methods=["DELETE"])
+@jwt_required()
+def delete_comment(id):
+    claims = get_jwt()
+
+    if claims.get("role") != "admin":
+        return jsonify({"error": "Forbidden"}), 403
+
+    comment = Comment.query.get(id)
+
+    if not comment:
+        return jsonify({"error": "Not found"}), 404
+
+    db.session.delete(comment)
+    db.session.commit()
+
+    return jsonify({"message": "Comment deleted"})
