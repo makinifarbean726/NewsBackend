@@ -1,0 +1,202 @@
+/* 
+   NationScope User Signup Theme
+   Colors: Navy (#001144), Red (#e31b23), Blue (#4d91ff)
+*/
+
+.user-signup-viewport {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f2f5;
+  font-family: 'Inter', sans-serif;
+}
+
+.signup-split-layout {
+  display: flex;
+  width: 100%;
+  max-width: 1100px;
+  min-height: 650px;
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(0, 17, 68, 0.25);
+  margin: 20px;
+}
+
+/* Left Branding Side */
+.signup-brand-side {
+  flex: 1;
+  background: linear-gradient(135deg, #001144 0%, #000822 100%);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 60px;
+  position: relative;
+}
+
+.brand-overlay {
+  z-index: 2;
+}
+
+.welcome-text h3 {
+  font-family: 'Georgia', serif;
+  font-size: 2rem;
+  margin-top: 40px;
+  margin-bottom: 15px;
+}
+
+.welcome-text p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  opacity: 0.8;
+  max-width: 400px;
+}
+
+.brand-accent-lines {
+  display: flex;
+  gap: 10px;
+  margin-top: 30px;
+}
+
+.accent-red { width: 60px; height: 6px; background: #e31b23; border-radius: 3px; }
+.accent-blue { width: 100px; height: 6px; background: #4d91ff; border-radius: 3px; }
+
+/* Right Form Side */
+.signup-form-side {
+  flex: 1.2;
+  padding: 60px;
+  display: flex;
+  align-items: center;
+  background-color: #ffffff;
+}
+
+.form-content-box {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.form-title {
+  color: #001144;
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin-bottom: 10px;
+  letter-spacing: -1px;
+}
+
+.form-subtitle {
+  color: #64748b;
+  margin-bottom: 35px;
+}
+
+.input-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.input-group label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #001144;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: #4d91ff;
+  box-shadow: 0 0 0 4px rgba(77, 145, 255, 0.15);
+}
+
+.terms-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 25px 0;
+  font-size: 0.9rem;
+  color: #64748b;
+  cursor: pointer;
+}
+
+.terms-checkbox input {
+  margin-top: 4px;
+  width: 18px;
+  height: 18px;
+  accent-color: #e31b23;
+}
+
+.terms-checkbox label span {
+  color: #4d91ff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.submit-btn {
+  width: 100%;
+  background: #e31b23;
+  color: white;
+  padding: 16px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 20px rgba(227, 27, 35, 0.2);
+}
+
+.submit-btn:hover:not(:disabled) {
+  background: #c2171e;
+  transform: translateY(-2px);
+  box-shadow: 0 15px 25px rgba(227, 27, 35, 0.3);
+}
+
+.submit-btn:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+}
+
+.redirect-text {
+  margin-top: 30px;
+  font-size: 0.95rem;
+  color: #64748b;
+  text-align: center;
+}
+
+.redirect-text a {
+  color: #4d91ff;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.redirect-text a:hover {
+  text-decoration: underline;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 900px) {
+  .signup-split-layout {
+    flex-direction: column;
+    max-width: 500px;
+  }
+  .signup-brand-side {
+    padding: 40px;
+  }
+  .signup-form-side {
+    padding: 40px 20px;
+  }
+}

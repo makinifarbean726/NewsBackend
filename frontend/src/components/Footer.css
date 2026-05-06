@@ -1,93 +1,149 @@
-.footer-main {
-  background-color: #001144; /* Deep Navy from NationScope Poster */
+.ns-footer {
+  background-color: #001246; /* NationScope Navy */
   color: #ffffff;
-  padding: 50px 20px 20px 20px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 80px 40px 20px 40px;
+  font-family: 'Inter', sans-serif;
+  border-top: 5px solid #d10000; /* Red accent top border */
 }
 
-.footer-container {
+.footer-content {
   max-width: 1200px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: 1.5fr 1fr 1fr 1.5fr;
   gap: 40px;
 }
 
+/* BRANDING */
 .footer-logo {
-  font-size: 1.8rem;
-  font-weight: 800;
-  margin-bottom: 5px;
-  text-transform: uppercase;
-  letter-spacing: -1px;
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  font-weight: 900;
+  cursor: pointer;
+  margin-bottom: 15px;
 }
 
 .footer-logo span {
-  color: #e31b23; /* Vibrant Red from NationScope Poster */
+  color: #d10000;
 }
 
-.footer-motto {
-  color: #4d91ff; /* Sky Blue accent */
-  font-style: italic;
+.footer-tagline {
   font-size: 0.9rem;
-  margin-bottom: 15px;
-  font-weight: 600;
-}
-
-.footer-heading {
-  font-size: 1.2rem;
-  margin-bottom: 20px;
-  border-bottom: 2px solid #e31b23;
-  display: inline-block;
-  padding-bottom: 5px;
-}
-
-.footer-text {
   line-height: 1.6;
-  font-size: 0.95rem;
-  color: #e0e0e0;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 25px;
 }
 
-.footer-list {
+/* COLUMNS & LISTS */
+.footer-column h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+}
+
+.footer-column ul {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
-.footer-list li {
-  margin-bottom: 10px;
+.footer-column ul li {
+  margin-bottom: 12px;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  transition: color 0.2s ease;
 }
 
-.footer-link {
-  color: #ffffff;
+.footer-column ul li:hover {
+  color: #d10000;
+  padding-left: 5px;
+}
+
+/* SOCIALS */
+.social-links {
+  display: flex;
+  gap: 15px;
+}
+
+.social-links a {
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: white;
   text-decoration: none;
-  transition: color 0.3s ease;
+  transition: all 0.3s ease;
 }
 
-.footer-link:hover {
-  color: #4d91ff;
-  text-decoration: underline;
+.social-links a:hover {
+  background: #d10000;
+  transform: translateY(-3px);
 }
 
+/* NEWSLETTER */
+.footer-input-group {
+  display: flex;
+  margin-top: 15px;
+}
+
+.footer-input-group input {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 10px 15px;
+  color: white;
+  border-radius: 4px 0 0 4px;
+  outline: none;
+  width: 100%;
+}
+
+.footer-btn {
+  background: #d10000;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+/* BOTTOM AREA */
 .footer-bottom {
-  margin-top: 40px;
+  margin-top: 60px;
   text-align: center;
-  font-size: 0.85rem;
-  color: #b0b0b0;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.4);
 }
 
 .footer-accent-line {
-  height: 4px;
-  width: 100%;
-  background: linear-gradient(90deg, #e31b23 0%, #ffffff 50%, #4d91ff 100%);
-  margin-bottom: 20px;
-  border-radius: 2px;
+  height: 2px;
+  width: 50px;
+  background: #d10000;
+  margin: 15px auto 0;
 }
 
-@media (max-width: 768px) {
-  .footer-container {
-    text-align: center;
-  }
-  
-  .footer-heading {
-    margin-top: 20px;
-  }
+@media (min-width: 768px) {
+.ns-footer {
+    margin-left: 5rem;
+}
+}
+
+@media (min-width: 1024px) {
+.ns-footer {
+    margin-left: 6.5rem;
+}
+}
+
+@media (min-width: 1440px) {
+.ns-footer {
+    margin-left: 9.5rem;
+}
 }

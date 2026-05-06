@@ -1,143 +1,183 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
-import ArticleCard from "../components/ArticleCard";
-import "./Home.css";
+import { useNavigate } from "react-router-dom";
 import MessageSender from "../components/MessageSender";
+import SearchBar from "../components/SearchBar";
+import fallbackImg from "../assets/WhatsApp Image 2026-04-28 at 10.50.40.jpeg";
+import "./Home.css";
 
 function Home() {
   const [articles, setArticles] = useState([]);
+  const [categories, setCategories] = useState({});
+  const [trending, setTrending] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  const token = localStorage.getItem("token");
-  const isAdmin = !!token;
-
-  const fetchArticles = async () => {
-    try {
-      setLoading(true);
-      const res = await api.get("/articles");
-      setArticles(res.data);
-      setError("");
-    } catch (err) {
-      console.error(err);
-      setError("Failed to load articles.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  
+  const role = localStorage.getItem("role");
+  const isAdmin = role === "admin";
+  const navigate = useNavigate();
 
   useEffect(() => {
-    fetchArticles();
+    const fetchHomeData = async () => {
+      try {
+        // Fetching 15+ articles to populate the large main feed
+        const res = await api.get("/articles");
+        const data = res.data || [];
+
+        setArticles(data);
+        buildTrending(data);
+        groupAndSetCategories(data);
+        setLoading(false);
+      } catch (err) {
+        console.error("Error fetching home data:", err);
+        setLoading(false);
+      }
+    };
+
+    fetchHomeData();
   }, []);
 
-  const featuredArticle = articles.length > 0 ? articles[0] : null;
-  const remainingArticles = articles.slice(1);
+  const groupAndSetCategories = (data) => {
+    const grouped = {};
+    data.forEach((article) => {
+      const articleCats = article.categories || [];
+      articleCats.forEach((cat) => {
+        if (!grouped[cat.id]) {
+          grouped[cat.id] = {
+            id: cat.id,
+            name: cat.name,
+            slug: cat.slug,
+            articles: [],
+          };
+        }
+        grouped[cat.id].articles.push(article);
+      });
+    });
+    setCategories(grouped);
+  };
+
+  const buildTrending = (data) => {
+    const sorted = [...data].sort((a, b) => b.views - a.views);
+    setTrending(sorted.slice(0, 6));
+  };
+
+  const formatDate = (date) => {
+    return new Date(date).toLocaleString("en-GB", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+  };
+
+  const getImage = (article) => {
+    const media = article.media?.[0];
+    if (!media?.file_url) return fallbackImg;
+    return media.file_url.startsWith("http")
+      ? media.file_url
+      : `http://127.0.0.1:5000${media.file_url}`;
+  };
+
+  // Logic to split the 15 articles
+  const topStory = articles[0];
+  const feedStories = articles.slice(1, 15); // Displays next 14 articles
+
+  if (loading) return <div className="ns-loader">Loading NationScope...</div>;
 
   return (
-    <div className="home-container">
-      <header className="home-header">
-        <div className="header-content">
-          <h1 className="main-logo">Nation<span>Scope</span></h1>
-          <div className="header-divider"></div>
-          <p className="tagline">Beyond the Headlines</p>
-          
-          {/* SYMBOLIC SEARCH BAR */}
-          <div className="search-container">
-            <input 
-              type="text" 
-              placeholder="Search news, topics, or nations..." 
-              className="symbolic-search"
-              disabled 
-            />
-            <button className="search-icon-btn">🔍</button>
-          </div>
-        </div>
-      </header>
-
-      <div className="main-content-grid">
-        {/* CENTER COLUMN */}
-        <main className="center-feed">
-          <div className="section-title-wrapper">
-            <h2 className="section-title">Top Stories</h2>
-            <div className="red-underline"></div>
-          </div>
-
-          {loading && <div className="loader">Loading updates...</div>}
-          {error && <p className="error-msg">{error}</p>}
-
-          {featuredArticle && (
-            <div className="featured-article-hero">
-              <ArticleCard 
-                article={featuredArticle} 
-                isFeatured={true} 
-                isAdmin={isAdmin} 
-              />
-              <div className="featured-badge">FEATURED STORY</div>
-            </div>
+        <div className={`app-container ${mobileMenuOpen ? "nav-is-open" : ""}`}>
+          {/* Global Overlay */}
+          {mobileMenuOpen && (
+            <div className="ui-overlay" onClick={() => setMobileMenuOpen(false)} />
           )}
 
-          <div className="standard-article-grid">
-            {remainingArticles.map((article) => (
-              <ArticleCard 
-                key={article.id} 
-                article={article} 
-                isAdmin={isAdmin} 
-              />
-            ))}
-          </div>
-        </main>
-
-        {/* RIGHT COLUMN */}
-        <aside className="right-summary-sidebar">
-          <div className="sidebar-header">
-            <span className="live-dot"></span>
-            <h3 className="sidebar-title">Live Updates</h3>
-          </div>
-
-          <div className="summary-list">
-            {articles.slice(0, 8).map((article, index) => (
-              <div key={`summary-${index}`} className="summary-card">
-                <span className="summary-index">0{index + 1}</span>
-                <p className="summary-headline">{article.title}</p>
-                {isAdmin && (
-                  <div className="summary-views">
-                    👁 {article.views || 0}
-                  </div>
-                )}
-                <div className="summary-footer">2 mins ago</div>
-              </div>
-            ))}
-          </div>
-        </aside>
-      </div>
-
-      {/* BOTTOM CAROUSEL */}
-      {!loading && (
-        <section className="bottom-scroll-section">
-          <div className="carousel-inner-wrap">
-            <h3 className="carousel-label">Recommended for you</h3>
-            <div className="horizontal-scroll-container">
-              {articles.map((article) => (
-                <div key={`carousel-${article.id}`} className="scroll-item-card">
-                  <div className="scroll-img-wrapper">
-                    <img
-                      src={article.media?.[0]?.file_url || "/placeholder.jpg"}
-                      alt=""
-                    />
-                  </div>
-                  <h4 className="scroll-item-title">{article.title}</h4>
-                  {isAdmin && (
-                    <p className="scroll-views">👁 {article.views || 0}</p>
-                  )}
+          <main className="main-layout">
+            
+            {/* 1. TOP NAVIGATION HEADER */}
+            <header className="navbar">
+              <div className="navbar__brand" onClick={() => navigate("/")}>
+                <img src={fallbackImg} alt="NationScope Logo" className="navbar__logo" />
+                <div className="navbar__title-group">
+                  <h1 className="navbar__title">
+                    Nation<span>Scope</span>News
+                  </h1>
+                  <p className="navbar__motto">BEYOND THE HEADLINES</p>
                 </div>
-              ))}
+              </div>
+                <div className="navbar_row">
+                <div className="navbar__search">
+                  <SearchBar />
+                </div>
+              </div>
+            </header>
+
+            {topStory && (
+              <section className="hero" onClick={() => navigate(`/article/${topStory.slug}`)}>
+                <div className="hero__card">
+                  <div className="hero__image-container">
+                    <img src={getImage(topStory)} alt="Featured" className="hero__img" />
+                    <span className="badge badge--featured">Featured Story</span>
+                  </div>
+                  <div className="hero__content">
+                    <h2 className="hero__title">{topStory.title}</h2>
+                    <p className="hero__excerpt">{topStory.content?.slice(0, 250)}...</p>
+                    <div className="article-meta">
+                      <span className="article-meta__author">By {topStory.author?.username}</span>
+                      <span className="article-meta__divider"></span>
+                      <span className="article-meta__date">{formatDate(topStory.created_at)}</span>
+                      {isAdmin && <span className="badge badge--views">Views: {topStory.views}</span>}
+                    </div>
+                  </div>
+                </div>
+              </section>
+            )}
+
+            <div className="content-shell">
+              <section className="feed">
+                <h3 className="section-title">Latest Stories</h3>
+                <div className="feed__grid">
+                  {feedStories.map((a) => (
+                    <article key={a.id} className="story-card" onClick={() => navigate(`/article/${a.slug}`)}>
+                      <div className="story-card__image-holder">
+                        <img src={getImage(a)} alt={a.title} className="story-card__img" />
+                      </div>
+                      <div className="story-card__body">
+                        <h3 className="story-card__title">{a.title}</h3>
+                        <p className="story-card__excerpt">{a.content?.slice(0, 100)}...</p>
+                        <div className="article-meta article-meta--small">
+                          <span>{a.author?.username}</span>
+                          <span className="article-meta__divider"></span>
+                          <span>{formatDate(a.created_at)}</span>
+                        </div>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </section>
+
+              {/* SIDEBAR COLUMN (Reserved 25%) */}
+              <aside className="sidebar">
+                <div className="sidebar__sticky">
+                  <h3 className="section-title">🔥 Hot Picks</h3>
+                  <div className="trending-list">
+                    {trending.map((a, index) => (
+                      <div key={a.id} className="trend-item" onClick={() => navigate(`/article/${a.slug}`)}>
+                        <span className="trend-item__rank">0{index + 1}</span>
+                        <div className="trend-item__info">
+                          <h4 className="trend-item__title">{a.title}</h4>
+                          <small className="trend-item__author">{a.author?.username}</small>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="sidebar__widget">
+                    <MessageSender />
+                  </div>
+                </div>
+              </aside>
             </div>
-          </div>
-        </section>
-      )}
-      <MessageSender />
-    </div>
-  );
-}
+          </main>
+        </div>
+      );
+      }
 
 export default Home;

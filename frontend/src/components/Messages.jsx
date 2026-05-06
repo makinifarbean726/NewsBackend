@@ -1,84 +1,103 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
-import "./Messages.css";
 
 function Messages() {
   const [messages, setMessages] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const token = localStorage.getItem("token");
+  const [loading, setLoading] = useState(false);
+
+  // =========================
+  // ROLE FROM LOCAL STORAGE
+  // =========================
+  const role = localStorage.getItem("role");
+  const isAdmin = role === "admin";
+
+  // =========================
+  // FETCH ALL MESSAGES
+  // =========================
+  const fetchMessages = async () => {
+    try {
+      const res = await api.get("/messages/admin/all");
+      setMessages(res.data || []);
+    } catch (err) {
+      console.error("FETCH MESSAGES ERROR:", err.response?.data || err);
+    }
+  };
 
   useEffect(() => {
-    const fetchMessages = async () => {
-      try {
-        const res = await api.get("/messages/admin/all", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setMessages(res.data);
-      } catch (err) {
-        console.error(err.response?.data || err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchMessages();
-  }, [token]);
+    if (isAdmin) fetchMessages();
+  }, [isAdmin]);
 
-  if (loading) {
-    return (
-      <div className="messages-loading">
-        <div className="spinner"></div>
-        <p>Accessing Secure Database...</p>
-      </div>
-    );
+  // =========================
+  // DELETE MESSAGE
+  // =========================
+  const deleteMessage = async (id) => {
+    const confirmDelete = window.confirm("Delete this message?");
+    if (!confirmDelete) return;
+
+    setLoading(true);
+
+    try {
+      await api.delete(`/messages/${id}`);
+
+      // remove instantly from UI
+      setMessages((prev) => prev.filter((m) => m.id !== id));
+    } catch (err) {
+      console.error("DELETE ERROR:", err.response?.data || err);
+      alert("Failed to delete message");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // =========================
+  // PROTECT PAGE
+  // =========================
+  if (!isAdmin) {
+    return <p>Access denied</p>;
   }
 
   return (
-    <div className="messages-page">
-      <header className="messages-header">
-        <div className="title-section">
-          <h1>Admin <span>Inbox</span></h1>
-          <p>Internal Communications & Reader Feedback</p>
+    <div style={{ padding: 20 }}>
+      <h2>📩 Admin Messages</h2>
+
+      {messages.length === 0 && <p>No messages yet</p>}
+
+      {messages.map((m) => (
+        <div
+          key={m.id}
+          style={{
+            border: "1px solid #ddd",
+            padding: 10,
+            marginBottom: 10,
+            borderRadius: 8,
+          }}
+        >
+          <p style={{ whiteSpace: "pre-line" }}>
+            {m.content}
+          </p>
+
+          <small>
+            {new Date(m.created_at).toLocaleString()}
+          </small>
+
+          <br />
+
+          <button
+            onClick={() => deleteMessage(m.id)}
+            disabled={loading}
+            style={{
+              marginTop: 10,
+              background: "red",
+              color: "white",
+              border: "none",
+              padding: "5px 10px",
+              cursor: "pointer",
+            }}
+          >
+            Delete
+          </button>
         </div>
-        <div className="stats-badge">
-          {messages.length} Total Messages
-        </div>
-      </header>
-
-      <div className="messages-container">
-        {messages.length === 0 ? (
-          <div className="empty-state">
-            <p>No messages found in the archive.</p>
-          </div>
-        ) : (
-          <div className="messages-grid">
-            {messages.map((msg) => (
-              <div key={msg.id} className="message-card">
-                <div className="card-top">
-                  <div className="user-info">
-                    <span className="avatar">{msg.sender_id.toString().substring(0, 1)}</span>
-                    <div className="user-details">
-                      <strong>User ID: {msg.sender_id}</strong>
-                      <span>Direct Message</span>
-                    </div>
-                  </div>
-                  <div className="message-badge">Internal</div>
-                </div>
-
-                <div className="card-body">
-                  <p className="message-content">{msg.content}</p>
-                </div>
-
-                <div className="card-footer">
-                  <span className="timestamp">
-                    {new Date(msg.created_at).toLocaleDateString()} at {new Date(msg.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
-                  </span>
-                  <button className="reply-link">Archive Message</button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+      ))}
     </div>
   );
 }

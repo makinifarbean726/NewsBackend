@@ -1,23 +1,31 @@
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import api from "../api/axios";
+import { useNavigate, useLocation } from "react-router-dom";
 import "./Sidebar.css";
 
 function Sidebar() {
-  const [isOpen, setIsOpen] = useState(false);
   const [categories, setCategories] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const toggleSidebar = () => {
-    setIsOpen(!isOpen);
-  };
+  const authPages = ["/login", "/signup"];
+  if (authPages.includes(location.pathname)) return null;
 
-  // =========================
-  // FETCH CATEGORIES FROM BACKEND
-  // =========================
   useEffect(() => {
+    // Handle screen resizing
+    const handleResize = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      if (!mobile) setIsOpen(false); // Reset toggle state if scaling back to desktop
+    };
+
+    window.addEventListener("resize", handleResize);
+    
     const fetchCategories = async () => {
       try {
-        const res = await api.get("/categories"); // ✅ public route
+        const res = await api.get("/categories");
         setCategories(res.data);
       } catch (err) {
         console.error("Failed to load categories", err);
@@ -25,95 +33,69 @@ function Sidebar() {
     };
 
     fetchCategories();
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Optional: simple icon mapping
-  const getIcon = (name) => {
-    const map = {
-      politics: "🏛️",
-      business: "📈",
-      technology: "💻",
-      sports: "⚽",
-      entertainment: "🎬",
-      health: "🏥",
-      environment: "🌱",
-      science: "🔬",
-    };
+  // Use toggle for mobile, hover for desktop
+  const sidebarClass = isMobile 
+    ? (isOpen ? "expanded mobile-open" : "collapsed mobile-closed") 
+    : (isOpen ? "expanded" : "collapsed");
 
-    return map[name.toLowerCase()] || "📰";
-  };
+  const handleMouseEnter = () => { if (!isMobile) setIsOpen(true); };
+  const handleMouseLeave = () => { if (!isMobile) setIsOpen(false); };
+  const toggleSidebar = () => setIsOpen(!isOpen);
 
   return (
     <>
-      {/* TOP NAVBAR */}
-      <nav className="navbar">
-        <div className="nav-left">
-          <button className="menu-toggle" onClick={toggleSidebar}>
-            ☰ <span>MENU</span>
-          </button>
-          <div className="nav-logo">
-            Nation<span>Scope</span>
-          </div>
+      {/* Mobile Toggle Button - Only visible < 768px */}
+      {isMobile && (
+        <button className="sidebar-toggle" onClick={toggleSidebar}>
+          {isOpen ? "✕" : "☰"}
+        </button>
+      )}
+
+      <aside 
+        className={`ns-sidebar ${sidebarClass}`}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        <div className="sidebar-logo-area">
+          <h2 className="sidebar-brand">
+            {isOpen ? <>Nation<span>Scope</span>News</> : <span>☰</span>}
+          </h2>
         </div>
-      </nav>
 
-      {/* SIDEBAR */}
-      <aside className={`sidebar ${isOpen ? "open" : "collapsed"}`}>
-        <div className="sidebar-content">
-          
-          {/* =========================
-              CATEGORIES (DYNAMIC)
-          ========================= */}
-          <div className="sidebar-section">
-            <p className="section-label">Categories</p>
-            <ul className="sidebar-list">
-              {categories.map((cat) => (
-                <li key={cat.id} className="sidebar-item">
-                  <Link to={`/category/${cat.slug}`}>
-                    <span className="item-icon">
-                      {getIcon(cat.name)}
-                    </span>
-                    <span className="item-text">{cat.name}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+        <nav className="sidebar-nav">
+          <div className="nav-item" onClick={() => navigate("/")}>
+            <span className="nav-icon">🏠</span>
+            {isOpen && <span className="nav-text">Home</span>}
           </div>
 
-          {/* =========================
-              STATIC LIBRARY
-          ========================= */}
-          <div className="sidebar-section">
-            <p className="section-label">Library</p>
-            <ul className="sidebar-list">
-              <li className="sidebar-item">
-                <Link to="/trending">
-                  <span className="item-icon">🔥</span>
-                  <span className="item-text">Trending</span>
-                </Link>
-              </li>
-              <li className="sidebar-item">
-                <Link to="/bookmarks">
-                  <span className="item-icon">🔖</span>
-                  <span className="item-text">Saved Stories</span>
-                </Link>
-              </li>
-              <li className="sidebar-item">
-                <Link to="/archive">
-                  <span className="item-icon">📂</span>
-                  <span className="item-text">Archives</span>
-                </Link>
-              </li>
-            </ul>
+          <div className="sidebar-divider">
+            {isOpen ? <span>Categories</span> : <div className="divider-line" />}
           </div>
 
+          <div className="category-scroll-list">
+            {categories.map((c) => (
+              <div
+                key={c.id}
+                className={`nav-item ${location.pathname.includes(c.slug) ? 'active' : ''}`}
+                onClick={() => {
+                  navigate(`/category/${c.slug}`);
+                  if (isMobile) setIsOpen(false); // Auto-close on click for mobile
+                }}
+              >
+                <span className="nav-icon">📁</span>
+                {isOpen && <span className="nav-text">{c.name}</span>}
+              </div>
+            ))}
+          </div>
+        </nav>
+
+        <div className="sidebar-footer">
+          <p>{isOpen ? "© 2026 NationScopeNews" : "©"}</p>
         </div>
       </aside>
-
-      {/* OVERLAY */}
-      {isOpen && (
-        <div className="sidebar-overlay" onClick={toggleSidebar}></div>
-      )}
     </>
   );
 }

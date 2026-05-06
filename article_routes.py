@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt
 import re
-
+from sqlalchemy import or_
 from extensions import db
 from models import Article, Media, Category
 
@@ -85,7 +85,7 @@ def create_article():
 # GET ALL ARTICLES
 @article_bp.route("", methods=["GET"])
 def get_articles():
-    articles = Article.query.filter_by(status="published")\
+    articles = Article.query.filter_by(status="posted")\
         .order_by(Article.created_at.desc())\
         .all()
 
@@ -99,6 +99,11 @@ def get_articles():
             "content": a.content,
             "views": a.views,
             "created_at": a.created_at,
+            "author": {
+                "id": a.author.id,
+                "username": a.author.username,
+                "email": a.author.email
+            } if a.author else None,
             "categories": [
                 {
                     "id": c.id,
@@ -131,7 +136,7 @@ def get_articles():
 # GET SINGLE ARTICLE
 @article_bp.route("/<string:slug>", methods=["GET"])
 def get_article(slug):
-    article = Article.query.filter_by(slug=slug, status="published").first()
+    article = Article.query.filter_by(slug=slug, status="posted").first()
     if not article:
         return jsonify({"error": "Not found"}), 404
 
@@ -147,6 +152,11 @@ def get_article(slug):
         "views": article.views,
         "comment_count": len(article.comments),
         "created_at": article.created_at,
+        "author": {
+            "id": article.author.id,
+            "username": article.author.username,
+            "email": article.author.email
+        } if article.author else None,
         "categories": [
             {
                 "id": c.id,
@@ -224,6 +234,32 @@ def update_article(id):
     db.session.commit()
 
     return jsonify({"message": "Article updated"})
+
+@article_bp.route("/search", methods=["GET"])
+def search_articles():
+    query = request.args.get("q", "")
+
+    if not query:
+        return jsonify([])
+
+    articles = Article.query.filter(
+        Article.status == "posted",
+        or_(
+            Article.title.ilike(f"%{query}%"),
+            Article.content.ilike(f"%{query}%")
+        )
+    ).order_by(Article.created_at.desc()).all()
+
+    return jsonify([
+        {
+            "id": a.id,
+            "title": a.title,
+            "slug": a.slug,
+            "content": a.content,
+            "created_at": a.created_at
+        }
+        for a in articles
+    ])
 
 
 # DELETE ARTICLE

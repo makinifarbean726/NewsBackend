@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt
-
+from datetime import timedelta
 from extensions import db
 from models import User
 
@@ -26,7 +26,7 @@ def register():
         username=username,
         email=email,
         password_hash=generate_password_hash(password),
-        role="admin"
+        role="user"
     )
 
     db.session.add(user)
@@ -34,7 +34,7 @@ def register():
 
     return jsonify({"message": "User created"}), 201
 
-#Login
+# Login
 @auth_bp.route("/login", methods=["POST"])
 def login():
     data = request.get_json()
@@ -46,11 +46,17 @@ def login():
 
     token = create_access_token(
         identity=str(user.id),
-        additional_claims={"role": user.role}
+        additional_claims={"role": user.role},
+        expires_delta=timedelta(hours=2) 
     )
 
-    return jsonify({"access_token": token})
-
+    return jsonify({
+        "access_token": token,
+        "role": user.role,      
+        "user_id": user.id,
+        "username": user.username,
+        "email": user.email
+    })
 
 # PROTECTED
 @auth_bp.route("/me", methods=["GET"])

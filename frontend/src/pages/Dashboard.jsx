@@ -1,170 +1,196 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
+import "./EditArticle.css";
+import "./Dashboard.css"
 
 function Dashboard() {
   const [title, setTitle] = useState("");
-  const [slug, setSlug] = useState("");
   const [content, setContent] = useState("");
-
-  const [file, setFile] = useState(null);
-  const [existingArticleId, setExistingArticleId] = useState("");
-
-  // =========================
-  // NEW: categories state
-  // =========================
   const [categories, setCategories] = useState([]);
-  const [categoryId, setCategoryId] = useState("");
+  const [articles, setArticles] = useState([]);
+  
+  // Logic for the Related Search Bar
+  const [relatedQuery, setRelatedQuery] = useState("");
+
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedRelated, setSelectedRelated] = useState([]);
+  const [files, setFiles] = useState([]);
 
   const token = localStorage.getItem("token");
 
-  // =========================
-  // FETCH CATEGORIES
-  // =========================
   useEffect(() => {
-    const fetchCategories = async () => {
+    const loadData = async () => {
       try {
-        const res = await api.get("/categories");
-        setCategories(res.data);
+        const catRes = await api.get("/categories");
+        const artRes = await api.get("/articles");
+        setCategories(catRes.data);
+        setArticles(artRes.data);
       } catch (err) {
-        console.error("Failed to load categories", err);
+        console.error(err);
       }
     };
-
-    fetchCategories();
+    loadData();
   }, []);
 
-  const handleCreate = async (e) => {
-    e.preventDefault();
+  // Filter logic: Search through articles in real-time
+  const filteredArticles = articles.filter((a) =>
+    a.title.toLowerCase().includes(relatedQuery.toLowerCase())
+  );
 
+  const handleFileChange = (e) => {
+    setFiles([...e.target.files]);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     if (!token) {
-      alert("Login required");
+      alert("Not authenticated");
       return;
     }
 
     try {
-      let articleId = existingArticleId;
+      const articleRes = await api.post(
+        "/articles",
+        {
+          title,
+          content,
+          category_ids: selectedCategories,
+          related_ids: selectedRelated,
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
 
-      // =========================
-      // CREATE ARTICLE
-      // =========================
-      if (!existingArticleId) {
-        const articleRes = await api.post(
-          "/articles",
-          {
-            title,
-            slug,
-            content,
-            category_id: categoryId || null, // ✅ NEW
-            status: "published",
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+      const articleId = articleRes.data.article_id;
 
-        articleId = articleRes.data.article_id;
-
-        console.log("Article created:", articleRes.data);
-      }
-
-      // =========================
-      // UPLOAD MEDIA
-      // =========================
-      if (file) {
+      for (let file of files) {
         const formData = new FormData();
         formData.append("file", file);
         formData.append("article_id", articleId);
         formData.append("title", file.name);
 
-        const mediaRes = await api.post("/media/upload", formData, {
+        await api.post("/media/upload", formData, {
           headers: {
             Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
           },
         });
-
-        console.log("Media uploaded:", mediaRes.data);
       }
 
-      alert("Success!");
-
-      // reset
+      alert("Article created successfully!");
       setTitle("");
-      setSlug("");
       setContent("");
-      setFile(null);
-      setExistingArticleId("");
-      setCategoryId("");
-
+      setFiles([]);
+      setSelectedCategories([]);
+      setSelectedRelated([]);
+      setRelatedQuery("");
     } catch (err) {
-      console.error(err.response?.data || err);
-      alert("Failed");
+      console.error(err);
+      alert("Failed to create article");
     }
   };
 
   return (
-    <div style={{ padding: "20px", maxWidth: "600px" }}>
+    <div className="edit-article-container">
       <h1>Admin Dashboard</h1>
+      <p className="subtitle">Draft and Publish New Stories</p>
 
-      <form onSubmit={handleCreate}>
-        <h3>Create New Article</h3>
+      <form onSubmit={handleSubmit}>
+        <div className="form-section">
+          <h3>Article Headline</h3>
+          <input
+            placeholder="Enter catchy headline..."
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="main-title-input"
+          />
 
-        <input
-          placeholder="Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-        <br /><br />
+          <h3>Content</h3>
+          <textarea
+            placeholder="Type your story here..."
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            rows={10}
+          />
+        </div>
 
-        <input
-          placeholder="Slug"
-          value={slug}
-          onChange={(e) => setSlug(e.target.value)}
-        />
-        <br /><br />
+        <div className="form-section">
+          <h3>Attachments (Images/Videos)</h3>
+          <input
+            type="file"
+            multiple
+            onChange={handleFileChange}
+            className="file-input-styled"
+          />
+        </div>
 
-        <textarea
-          placeholder="Content"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-        />
-        <br /><br />
+        <div className="taxonomy-grid">
+          {/* CATEGORIES COLUMN */}
+          <div className="taxonomy-column">
+            <h3>Categories</h3>
+            <div className="checkbox-group">
+              {categories.map((c) => (
+                <label key={c.id}>
+                  <input
+                    type="checkbox"
+                    checked={selectedCategories.includes(c.id)}
+                    onChange={() => {
+                      setSelectedCategories((prev) =>
+                        prev.includes(c.id) ? prev.filter((x) => x !== c.id) : [...prev, c.id]
+                      );
+                    }}
+                  />
+                  {c.name}
+                </label>
+              ))}
+            </div>
+          </div>
 
-        {/* =========================
-            CATEGORY SELECT DROPDOWN
-        ========================= */}
-        <select
-          value={categoryId}
-          onChange={(e) => setCategoryId(e.target.value)}
-        >
-          <option value="">Select Category</option>
+          {/* SEARCH & ATTACH COLUMN */}
+          <div className="taxonomy-column">
+            <h3>Link Related Content</h3>
+            
+            <div className="related-search-wrapper">
+              <div className="search-input-wrapper miniature">
+                <span className="search-icon">🔍</span>
+                <input
+                  type="text"
+                  placeholder="Search existing news..."
+                  value={relatedQuery}
+                  onChange={(e) => setRelatedQuery(e.target.value)}
+                  className="ns-search-input"
+                />
+              </div>
+            </div>
 
-          {categories.map((cat) => (
-            <option key={cat.id} value={cat.id}>
-              {cat.name}
-            </option>
-          ))}
-        </select>
+            <div className="checkbox-group">
+              {filteredArticles.length > 0 ? (
+                filteredArticles.map((a) => (
+                  <label key={a.id} className={selectedRelated.includes(a.id) ? "selected-item" : ""}>
+                    <input
+                      type="checkbox"
+                      checked={selectedRelated.includes(a.id)}
+                      onChange={() => {
+                        setSelectedRelated((prev) =>
+                          prev.includes(a.id) ? prev.filter((x) => x !== a.id) : [...prev, a.id]
+                        );
+                      }}
+                    />
+                    {a.title}
+                  </label>
+                ))
+              ) : (
+                <p className="no-results">No articles match your search</p>
+              )}
+            </div>
+            {selectedRelated.length > 0 && (
+              <p className="selection-count">{selectedRelated.length} Articles Linked</p>
+            )}
+          </div>
+        </div>
 
-        <br /><br />
-
-        <h3>OR Attach Media to Existing Article</h3>
-
-        <input
-          placeholder="Existing Article ID (optional)"
-          value={existingArticleId}
-          onChange={(e) => setExistingArticleId(e.target.value)}
-        />
-        <br /><br />
-
-        <input
-          type="file"
-          onChange={(e) => setFile(e.target.files[0])}
-        />
-        <br /><br />
-
-        <button type="submit">Submit</button>
+        <button type="submit" className="btn-save-main">
+          Publish to NationScope
+        </button>
       </form>
     </div>
   );

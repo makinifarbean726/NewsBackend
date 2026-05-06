@@ -7,8 +7,9 @@ from models import Message
 message_bp = Blueprint("messages", __name__, url_prefix="/api/messages")
 
 
-# SEND MESSAGE (PUBLIC)
+# SEND MESSAGE
 @message_bp.route("", methods=["POST"])
+@jwt_required()
 def send_message():
     data = request.get_json() or request.form
 

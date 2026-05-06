@@ -1,0 +1,129 @@
+/* --- CONTAINER & SIDEBAR OFFSET --- */
+.search-results-page {
+  max-width: 900px;
+  margin-right: auto;
+  padding: 50px 20px;
+  min-height: 100vh;
+  background-color: #ffffff;
+  font-family: 'Inter', sans-serif;
+}
+
+/* --- HEADER --- */
+.search-header {
+  margin-bottom: 40px;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 20px;
+}
+
+.search-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.2rem;
+  color: #001246;
+  margin: 0;
+}
+
+.search-title span {
+  color: #d10000;
+  font-style: italic;
+}
+
+.search-count {
+  font-size: 0.85rem;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 700;
+  margin-top: 5px;
+}
+
+/* --- RESULTS LIST --- */
+.results-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.search-item-card {
+  padding: 25px;
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #f1f5f9;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.search-item-card:hover {
+  border-color: #d10000;
+  background: #fdfdfd;
+  transform: translateX(8px);
+  box-shadow: 0 4px 20px rgba(0, 18, 70, 0.05);
+}
+
+/* Vertical red line accent on hover */
+.search-item-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 4px;
+  background: #001246;
+  transition: background 0.3s ease;
+}
+
+.search-item-card:hover::before {
+  background: #d10000;
+}
+
+.search-item-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem;
+  color: #001246;
+  margin: 0 0 10px 0;
+  line-height: 1.3;
+}
+
+.search-item-excerpt {
+  font-size: 0.95rem;
+  color: #475569;
+  line-height: 1.6;
+  margin-bottom: 15px;
+}
+
+.read-more-link {
+  color: #d10000;
+  font-weight: 800;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* --- EMPTY STATE --- */
+.no-results-box {
+  padding: 60px 0;
+  text-align: center;
+  color: #64748b;
+}
+
+.back-home-btn {
+  margin-top: 20px;
+  background: #001246;
+  color: white;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 50px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.back-home-btn:hover {
+  background: #d10000;
+}
+
+@media (min-width: 768px) {
+.search-results-page {
+    margin-left: 8rem;
+}
+}

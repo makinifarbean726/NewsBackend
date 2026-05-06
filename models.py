@@ -35,29 +35,6 @@ class User(db.Model):
         cascade="all, delete-orphan"
     )
 
-    comments = db.relationship(
-        "Comment",
-        backref="user",
-        lazy=True,
-        cascade="all, delete-orphan"
-    )
-
-    sent_messages = db.relationship(
-        "Message",
-        foreign_keys="Message.sender_id",
-        backref="sender",
-        lazy=True,
-        cascade="all, delete-orphan"
-    )
-
-    received_messages = db.relationship(
-        "Message",
-        foreign_keys="Message.receiver_id",
-        backref="receiver",
-        lazy=True,
-        cascade="all, delete-orphan"
-    )
-
 # CATEGORY
 class Category(db.Model):
     __tablename__ = "categories"
@@ -154,7 +131,6 @@ class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=False)
 
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     article_id = db.Column(db.Integer, db.ForeignKey("articles.id"), nullable=False)
 
     created_at = db.Column(db.DateTime, default=datetime.utcnow)

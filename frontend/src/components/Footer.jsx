@@ -1,43 +1,76 @@
-import React from "react";
-import "./Footer.css";
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import './Footer.css';
 
-function Footer() {
+const Footer = () => {
+  const navigate = useNavigate();
+  const currentYear = new Date().getFullYear();
+
   return (
-    <footer className="footer-main">
-      <div className="footer-container">
-        {/* LEFT SECTION */}
-        <div className="footer-section">
-          <h3 className="footer-logo">Nation<span>Scope</span></h3>
-          <p className="footer-motto">Beyond the Headlines</p>
-          <p className="footer-text">
-            Your daily source of breaking news, features, and stories across the continent.
+    <footer className="ns-footer">
+      <div className="footer-content">
+        
+        {/* BRAND COLUMN */}
+        <div className="footer-column brand-info">
+          <h2 className="footer-logo" onClick={() => navigate('/')}>
+            Nation<span>Scope</span>
+          </h2>
+          <p className="footer-tagline">
+            Delivering deep-dive journalism and real-time reports from across the nation.
           </p>
+          <div className="social-links">
+            <a href="https://facebook.com" target="_blank" rel="noreferrer" aria-label="Facebook">
+              <i className="fab fa-facebook-f"></i>
+            </a>
+            <a href="mailto:contact@nationscope.com" aria-label="Email">
+              <i className="fas fa-envelope"></i>
+            </a>
+            <a href="tel:+1234567890" aria-label="Phone">
+              <i className="fas fa-phone-alt"></i>
+            </a>
+          </div>
         </div>
 
-        {/* CENTER LINKS */}
-        <div className="footer-section">
-          <h4 className="footer-heading">Quick Links</h4>
-          <ul className="footer-list">
-            <li><a href="/home" className="footer-link">Home</a></li>
-            <li><a href="/login" className="footer-link">Login</a></li>
+        {/* NAVIGATION COLUMN */}
+        <div className="footer-column">
+          <h3>Quick Links</h3>
+          <ul>
+            <li onClick={() => navigate('/')}>Home</li>
+            <li onClick={() => navigate('/search?q=latest')}>Latest News</li>
+            <li onClick={() => navigate('/categories')}>Browse Topics</li>
+            <li>Terms of Service</li>
           </ul>
         </div>
 
-        {/* RIGHT INFO */}
-        <div className="footer-section">
-          <h4 className="footer-heading">Contact: 07xxxxxxxx</h4>
-          <p className="footer-text">Email: support@nationscope.com</p>
-          <p className="footer-text">Location: Eldoret, Kenya</p>
+        {/* SUPPORT COLUMN */}
+        <div className="footer-column">
+          <h3>Help & Support</h3>
+          <ul>
+            <li>Contact Editors</li>
+            <li>Press Room</li>
+            <li>Privacy Policy</li>
+            <li>Advertising</li>
+          </ul>
         </div>
+
+        {/* NEWSLETTER/EDITABLE SECTION */}
+        <div className="footer-column newsletter">
+          <h3>Stay Informed</h3>
+          <p>Join our newsletter for weekly deep-dives.</p>
+          <div className="footer-input-group">
+            <input type="email" placeholder="Email address" />
+            <button className="footer-btn">Join</button>
+          </div>
+        </div>
+
       </div>
 
-      {/* BOTTOM BAR */}
       <div className="footer-bottom">
+        <p>&copy; {currentYear} NationScope News Media. All rights reserved.</p>
         <div className="footer-accent-line"></div>
-        <p>© {new Date().getFullYear()} NationScope News. All rights reserved.</p>
       </div>
     </footer>
   );
-}
+};
 
 export default Footer;

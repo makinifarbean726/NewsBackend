@@ -1,0 +1,118 @@
+POST http://127.0.0.1:5000/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "email": "admin@gmail.com",
+  "password": "123456"
+}
+
+POST http://127.0.0.1:5000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@gmail.com",
+  "password": "123456"
+}
+
+GET http://127.0.0.1:5000/api/auth/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc3NzU3MTgzMywianRpIjoiMjE3OTI4ODAtZjdlOS00OTNjLWFkMmUtODg2MGRmNzg1MWVlIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjEiLCJuYmYiOjE3Nzc1NzE4MzMsImNzcmYiOiJkNWE4NDZjMS02N2ZiLTRhZGQtYWQ1My00YWQxYjk5ZGFjY2UiLCJleHAiOjE3Nzc1NzI3MzMsInJvbGUiOiJhZG1pbiJ9.9Zvntcsxo4_ldeFND99OM3-uGC2LHzRZgZXPFD3mjb0
+
+POST http://127.0.0.1:5000/api/articles
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc3NzgxMTEwNSwianRpIjoiM2UwM2RmMDgtMDExMy00ZGVlLTg2YzYtMGRmNmUwMzgzOTdmIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjEiLCJuYmYiOjE3Nzc4MTExMDUsImNzcmYiOiJkMjRlOWZkMy0wZDY3LTQyOWMtOTBlNS1iZWQ4YjYwYmQxYTEiLCJleHAiOjE3Nzc4MTIwMDUsInJvbGUiOiJhZG1pbiJ9.usuo5OBqdxZw6I-7XYeCWRHNOr9nJr6ohgnVQk57zB8
+Content-Type: application/json
+
+{
+  "title": "Kenya Meteorological Department Issues Heavy Rainfall Warning",
+  "content": "The Kenya Meteorological Department has issued a warning about heavy rainfall expected across several regions including Nairobi, Kisumu, and Mombasa. Residents in flood-prone areas are advised to take precautions. The rains are expected to last for the next five days, potentially affecting transport and agriculture. Authorities have placed emergency response teams on standby.",
+}
+
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc3NzY2NDY0NSwianRpIjoiNTEwMWYwYTgtNjJiNS00ODA3LWI5NzAtOTRkMWU2OTc5NDZjIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjEiLCJuYmYiOjE3Nzc2NjQ2NDUsImNzcmYiOiJhNWFjNmRkMi1kMGQ1LTQwZWQtYTRlNy0zMWNiN2UzMDMwNWIiLCJleHAiOjE3Nzc2NjU1NDUsInJvbGUiOiJhZG1pbiJ9.5OIyhDpApqsF1GCoiOQ5J8rsDqiXGCPfLxgkUAE2nkQ
+
+GET http://127.0.0.1:5000/api/articles
+
+GET http://127.0.0.1:5000/api/articles/breaking-news-1
+
+DELETE http://127.0.0.1:5000/api/articles/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc3NzgwNTMxNSwianRpIjoiMGI4OWMyNDctZmMxMi00OTlkLWIzN2EtNzI5NjdiMmEzMWFlIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjMiLCJuYmYiOjE3Nzc4MDUzMTUsImNzcmYiOiIyYmViMTk3NC05ZGFmLTQ2NjItYmYyZi1hMzIzOGY2ODExMDAiLCJleHAiOjE3Nzc4MDYyMTUsInJvbGUiOiJhZG1pbiJ9.wI6yWDvqlI4OABCqgusWX80Ex_XoHVb61zpAV7GfSPc
+Content-Type: application/json
+
+
+{
+  "title": "Updated Title"
+}
+
+POST http://127.0.0.1:5000/api/media/upload
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc3NzU3Mzk5OSwianRpIjoiYjA4NjE4MDgtZmI5Ni00NDFmLTk0MjEtNjhkZDdlNDEyMjNiIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjEiLCJuYmYiOjE3Nzc1NzM5OTksImNzcmYiOiI4NGMwMWYyMy0xNTRmLTQyOTUtYjYxOC05ZWI2ZjRiOTBmYzMiLCJleHAiOjE3Nzc1NzQ4OTksInJvbGUiOiJhZG1pbiJ9.nRNqh3Tjd7jYq1Lc6cPojwhuyFCqj_BhZRuFBr6Ymto
+Content-Type: multipart/form-data
+
+file=@C:\Users\User\Desktop\Downloads\ad1.png
+title=Test Image
+article_id=1
+
+POST http://127.0.0.1:5000/api/comments/
+Content-Type: application/json
+
+{
+  "article_id": 1,
+  "name": "John Doe",
+  "email": "john@email.com",
+  "message": "Great article!"
+}
+
+GET http://127.0.0.1:5000/api/comments/article/1
+
+POST http://127.0.0.1:5000/api/categories/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc3NzU3NTU2NiwianRpIjoiMmZiYmY1ZTQtNjk3OS00NzljLTgxYjgtOTQ2YWY2ZDRjNDFhIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjEiLCJuYmYiOjE3Nzc1NzU1NjYsImNzcmYiOiIwZGE2MTdiNy0yYzRhLTQ3OTMtOTQ0ZC0wMTgzZjM0ODQ4NWMiLCJleHAiOjE3Nzc1NzY0NjYsInJvbGUiOiJhZG1pbiJ9.jTgBcj2LikaNYpNkdWIpArPt4NOOWABChusrNYsbmlU
+Content-Type: application/json
+
+{
+  "name": "Politics",
+  "slug": "politics"
+}
+
+POST http://127.0.0.1:5000/api/categories
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc3NzgxMTUwOSwianRpIjoiODA2NTk3MmQtZjY4YS00ZmQyLWIwZGMtZWNlMzU3YTkxZmM2IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjEiLCJuYmYiOjE3Nzc4MTE1MDksImNzcmYiOiJkNWZkZDMwYS1lYWVmLTQ1NjAtYTM1ZC05ZmM4MWRlZDk2NWYiLCJleHAiOjE3Nzc4MTI0MDksInJvbGUiOiJhZG1pbiJ9.wzUEVQELk1hN8ZhKYz9MC377mCL0GZGcryAr63S91hA
+Content-Type: application/json
+
+{
+  "name": "Health",
+  "slug": "Health"
+}
+
+GET http://127.0.0.1:5000/api/categories/breaking-news
+
+GET http://127.0.0.1:5000/api/categories
+
+### =========================
+### SEND MESSAGE (TO ADMIN)
+### =========================
+POST http://127.0.0.1:5000/api/messages
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc3NzczOTc0MSwianRpIjoiNDUxYmQxMjktZmE0Ny00ZDhjLTk3OWUtZDQxYTEzNTA4ZjkwIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjEiLCJuYmYiOjE3Nzc3Mzk3NDEsImNzcmYiOiJjN2VlMzk1MC0xZjYwLTRjYzUtYmVmMS1mODVlZDMxMWI1OTIiLCJleHAiOjE3Nzc3NDA2NDEsInJvbGUiOiJhZG1pbiJ9.tg6JX2Jh7-Jct0kNc4Cbwy74U1eEfLs5CrYluUA8Kqk
+
+{
+  "content": "Hello admin, this is a test message"
+}
+
+GET http://127.0.0.1:5000/api/messages/admin/all
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc3Nzc0MDc3NywianRpIjoiZjU2YjdjNGUtMzZhZS00ZDJlLWEzMzEtMzllOWY0MzA4Y2FiIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjEiLCJuYmYiOjE3Nzc3NDA3NzcsImNzcmYiOiJkMzYyYmZmYi1hYzBhLTQwNTYtYmMzZi1mZTBhZGVlMjNjMGUiLCJleHAiOjE3Nzc3NDE2NzcsInJvbGUiOiJhZG1pbiJ9.4eHttu5RsfoZwud1CI79FFIUqYylgqf0iMgIYJi_bgM
+
+GET http://127.0.0.1:5000/api/categories
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc3Nzc0MTcwNiwianRpIjoiYjZjZWU3OTQtZGU5ZS00M2U3LTkyNGEtYzhkNzBlNzhlN2E4IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjEiLCJuYmYiOjE3Nzc3NDE3MDYsImNzcmYiOiJlMTU4OGZlZS1iZjY2LTQ5ZGYtODQ1OC1jN2I1ZWY1Zjk0YjAiLCJleHAiOjE3Nzc3NDI2MDYsInJvbGUiOiJhZG1pbiJ9.zUnjUGYmH3ZDu05EFVYpOyR0pmcvfUCSqRYjsb-FAZc
+
+{
+  "name": "World / International",
+  "slug": "World / International"
+}
+
+GET http://127.0.0.1:5000/api/categories
+
+GET http://127.0.0.1:5000/api/categories/health
+
+GET http://127.0.0.1:5000/api/messages/admin/all
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc3NzgxNDA1MSwianRpIjoiNzU2NmQ0ZjMtMzUzZi00YzZhLWJhYWItODQ4YTlhYWU3ZWViIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjEiLCJuYmYiOjE3Nzc4MTQwNTEsImNzcmYiOiIwNDc3NDVhOC02Y2NlLTRjYjctODQyMy05NmZkNzY3ZDUwNmQiLCJleHAiOjE3Nzc4MTQ5NTEsInJvbGUiOiJhZG1pbiJ9.A97NgJ_sHEtX9Kf2a0Qcs7ho5CmovY9r-ZKJV0jbYlo
+Content-Type: application/json
+

@@ -8,6 +8,7 @@ comment_bp = Blueprint("comments", __name__, url_prefix="/api/comments")
 
 
 @comment_bp.route("", methods=["POST"])
+@jwt_required()
 def create_comment():
     data = request.get_json() or request.form
 
@@ -20,7 +21,6 @@ def create_comment():
     comment = Comment(
         content=content,
         article_id=article_id,
-        user_id=None
     )
 
     db.session.add(comment)
@@ -34,9 +34,6 @@ def create_comment():
 def get_comments(article_id):
     claims = get_jwt()
 
-    if claims.get("role") != "admin":
-        return jsonify({"error": "Forbidden"}), 403
-
     comments = Comment.query.filter_by(article_id=article_id).order_by(Comment.created_at.desc()).all()
 
     return jsonify([
@@ -47,7 +44,6 @@ def get_comments(article_id):
         }
         for c in comments
     ])
-
 
 @comment_bp.route("/<int:id>", methods=["DELETE"])
 @jwt_required()

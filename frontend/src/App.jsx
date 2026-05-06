@@ -1,51 +1,55 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Login from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+
 import Home from "./pages/Home";
 import Article from "./pages/Article";
-import Footer from "./components/Footer";
-import ProtectedRoute from "./utils/ProtectedRoute";
-import Sidebar from "./components/Sidebar";
-import MessageSender from "./components/MessageSender";
-import Messages from "./components/Messages";
+import Dashboard from "./pages/Dashboard";
+import Login from "./pages/Login";
 import CategoryPage from "./pages/CategoryPage";
+import Messages from "./components/Messages";
+import SearchResults from "./pages/SearchResults";
+import EditArticle from "./pages/EditArticle";
+import Signup from "./pages/Signup";
 
+import Sidebar from "./components/Sidebar";
+
+// =========================
+// LAYOUT WRAPPER
+// =========================
+function Layout({ children }) {
+  const location = useLocation();
+
+  // ❌ hide sidebar on auth pages
+  const hideSidebar =
+    location.pathname === "/login" ||
+    location.pathname === "/signup";
+
+  return (
+    <div style={{ display: "block" }}>
+      {!hideSidebar && <Sidebar />}
+      <div style={{ flex: 1 }}>{children}</div>
+    </div>
+  );
+}
+
+// =========================
+// APP ROUTES
+// =========================
 function App() {
   return (
     <BrowserRouter>
-      {/* MAIN APP ROUTES */}
-      <Routes>
-        {/* PUBLIC ROUTE */}
-        <Route path="/login" element={<Login />} />
-
-        {/* PROTECTED ROUTES */}
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/home"
-          element={
-            <ProtectedRoute>
-              <Home />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route path="/article/:slug" element={<Article />} />
-        <Route path="/msg" element={<MessageSender />} />
-        <Route path="/msgg" element={<Messages />} />
-        <Route path="/category/:slug" element={<CategoryPage />} />
-      </Routes>
-
-      {/* FOOTER (always visible) */}
-      <Footer />
-      <Sidebar />
+      <Layout>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/article/:slug" element={<Article />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/category/:slug" element={<CategoryPage />} />
+          <Route path="/msgg" element={<Messages />} />
+          <Route path="/search" element={<SearchResults />} />
+          <Route path="/edit-article/:id" element={<EditArticle />} />
+        </Routes>
+      </Layout>
     </BrowserRouter>
   );
 }

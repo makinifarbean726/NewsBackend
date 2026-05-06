@@ -1,188 +1,154 @@
-:root {
-  --nav-navy: #001144;
-  --ns-red: #e31b23;
-  --ns-blue: #4d91ff;
-  --sidebar-width-full: 260px;
-  --sidebar-width-collapsed: 70px;
-  --navbar-height: 60px;
-}
-
-/* NAVBAR STYLES */
-.navbar {
+/* --- Base Styles (Desktop / Large Screens) --- */
+.ns-sidebar {
+  height: 100vh;
+  background-color: #001144;
+  color: white;
   position: fixed;
+  left: 0;
   top: 0;
-  left: 0;
-  right: 0;
-  height: var(--navbar-height);
-  background-color: var(--nav-navy);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 20px;
-  z-index: 1000;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-}
-
-.nav-left, .nav-right {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.menu-toggle {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 1.2rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: bold;
-}
-
-.menu-toggle span { font-size: 0.8rem; letter-spacing: 1px; }
-
-.nav-logo {
-  color: white;
-  text-decoration: none;
-  font-weight: 900;
-  font-size: 1.4rem;
-  text-transform: uppercase;
-}
-
-.nav-logo span { color: var(--ns-red); }
-
-.nav-search {
-  background: rgba(255,255,255,0.1);
-  border: 1px solid rgba(255,255,255,0.2);
-  padding: 6px 12px;
-  border-radius: 20px;
-  color: white;
-  outline: none;
-}
-
-.nav-login-btn {
-  background: var(--ns-red);
-  color: white;
-  text-decoration: none;
-  padding: 5px 15px;
-  border-radius: 4px;
-  font-size: 0.85rem;
-  font-weight: bold;
-}
-
-/* SIDEBAR STYLES */
-.sidebar {
-  position: fixed;
-  top: var(--navbar-height);
-  left: 0;
-  bottom: 0;
-  background-color: #ffffff;
-  width: var(--sidebar-width-collapsed);
-  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 999;
-  overflow-x: hidden;
-  box-shadow: 2px 0 10px rgba(0,0,0,0.05);
   display: flex;
   flex-direction: column;
-}
-
-/* HOVER EFFECT: Expand sidebar on hover */
-.sidebar:hover, .sidebar.open {
-  width: var(--sidebar-width-full);
-}
-
-.sidebar-content {
-  flex-grow: 1;
   padding: 20px 0;
+  z-index: 2000;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s ease;
+  overflow-x: auto;
+  box-shadow: 4px 0 15px rgba(0, 0, 0, 0.2);
 }
 
-.sidebar-section {
-  margin-bottom: 25px;
+/* Desktop Widths */
+.ns-sidebar.collapsed { width: 10%; }
+.ns-sidebar.expanded { width: 25%; }
+
+/* --- Mobile / Tablet Styles (< 800px) --- */
+@media (max-width: 799px) {
+  .sidebar-toggle {
+    position: fixed;
+    top: 75px;
+    left: 15px;
+    z-index: 2100;
+    background: #e31b23;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    width: 40px;
+    height: 40px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+  }
+
+  /* When closed on mobile, move it entirely off-screen */
+  .ns-sidebar.mobile-closed {
+    width: 25%; /* Keep width consistent but hide via transform */
+    min-width: 240px;
+    transform: translateX(-100%);
+  }
+
+  .ns-sidebar.mobile-open {
+    width: 25%;
+    min-width: 240px;
+    transform: translateX(0);
+  }
+
+  .sidebar-logo-area {
+    padding-top: 60px; /* Push logo down to not overlap toggle button */
+  }
 }
 
-.section-label {
-  padding: 0 25px;
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  color: #999;
-  font-weight: 700;
-  margin-bottom: 10px;
-  white-space: nowrap;
-  opacity: 0;
-  transition: opacity 0.2s;
-}
-
-.sidebar:hover .section-label, .sidebar.open .section-label {
-  opacity: 1;
-}
-
-.sidebar-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.sidebar-item a {
+/* --- Shared Inner Styles --- */
+.sidebar-logo-area {
+  padding: 0 20px 40px 20px;
+  height: 50px;
   display: flex;
   align-items: center;
-  padding: 12px 25px;
-  text-decoration: none;
-  color: var(--nav-navy);
-  transition: background 0.2s, color 0.2s;
 }
 
-.sidebar-item a:hover {
-  background-color: rgba(77, 145, 255, 0.1);
-  color: var(--ns-blue);
+.sidebar-brand { 
+  font-size: 1.5rem; 
+  font-weight: 900; 
+  white-space: nowrap; 
+}
+.sidebar-brand span { color: #e31b23; }
+
+.sidebar-nav { 
+  flex: 1; 
+  display: flex; 
+  flex-direction: column; 
+  gap: 8px; 
 }
 
-.item-icon {
-  font-size: 1.2rem;
-  min-width: 30px;
-}
-
-.item-text {
-  margin-left: 15px;
-  font-weight: 600;
+.nav-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 22px;
+  cursor: pointer;
+  transition: background 0.2s;
   white-space: nowrap;
-  opacity: 0;
-  transition: opacity 0.2s;
 }
 
-.sidebar:hover .item-text, .sidebar.open .item-text {
-  opacity: 1;
+.nav-item:hover { background-color: rgba(255, 255, 255, 0.1); }
+.nav-item.active { 
+  border-left: 4px solid #e31b23; 
+  background: rgba(227, 27, 35, 0.1); 
 }
 
-.sidebar-footer {
-  padding: 20px;
-  text-align: center;
+.nav-icon { font-size: 1.4rem; min-width: 30px; }
+.nav-text { margin-left: 15px; font-weight: 500; }
+
+.sidebar-divider { 
+  padding: 20px 22px; 
+  color: rgba(255, 255, 255, 0.4); 
+  text-transform: uppercase; 
+  font-size: 0.7rem; 
+  letter-spacing: 1px; 
+}
+.divider-line { 
+  height: 1px; 
+  background: rgba(255, 255, 255, 0.1); 
+  width: 100%; 
 }
 
-.footer-line {
-  height: 2px;
-  width: 100%;
-  background: linear-gradient(90deg, var(--ns-red), var(--ns-blue));
-  margin-bottom: 10px;
+.sidebar-footer { 
+  padding: 20px; 
+  text-align: center; 
+  color: rgba(255, 255, 255, 0.3); 
+  font-size: 0.8rem; 
 }
 
-.footer-ver {
-  font-size: 0.7rem;
-  color: #ccc;
+/* --- Toggle Button Visibility Logic --- */
+/* Hide toggle on desktop */
+@media (min-width: 800px) {
+  .sidebar-toggle {
+    display: none;
+  }
 }
 
-/* OVERLAY */
-.sidebar-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.4);
-  z-index: 998;
-}
+@media (max-width: 767px) {
+  .sidebar-brand {
+    font-size: 1.1rem;
+  }
 
-/* Adjusting Main Layout (For your reference) */
-body {
-  padding-top: var(--navbar-height);
-  padding-left: var(--sidebar-width-collapsed);
-  transition: padding-left 0.3s;
+  .nav-text {
+    font-size: 0.9rem; 
+    margin-left: 10px;  
+  }
+
+  .nav-icon {
+    font-size: 1rem;
+    min-width: 20px;  
+  }
+
+  .sidebar-divider {
+    font-size: 0.3rem; 
+    padding: 10px 15px;
+  }
+
+  /* Shrink the Footer Text */
+  .sidebar-footer {
+    font-size: 0.7rem;
+    padding: 15px;
+  }
 }

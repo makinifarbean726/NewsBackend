@@ -4,11 +4,18 @@ const api = axios.create({
   baseURL: "http://127.0.0.1:5000/api",
 });
 
-// ✅ Automatically attach token to every request
+// ✅ attach token automatically
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
 
-  if (token) {
+  const url = config.url || "";
+
+  // ❌ NEVER attach token to auth routes
+  const isAuthRoute =
+    url.includes("/auth/login") ||
+    url.includes("/auth/register");
+
+  if (token && !isAuthRoute) {
     config.headers.Authorization = `Bearer ${token}`;
   }
 
