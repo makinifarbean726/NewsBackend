@@ -9,7 +9,7 @@ import Messages from "./components/Messages";
 import SearchResults from "./pages/SearchResults";
 import EditArticle from "./pages/EditArticle";
 import Signup from "./pages/Signup";
-
+import Footer from "./components/Footer";
 import Sidebar from "./components/Sidebar";
 
 // =========================
@@ -49,6 +49,7 @@ function App() {
           <Route path="/search" element={<SearchResults />} />
           <Route path="/edit-article/:id" element={<EditArticle />} />
         </Routes>
+        <Footer />
       </Layout>
     </BrowserRouter>
   );

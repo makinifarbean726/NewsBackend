@@ -1,17 +1,15 @@
 .ns-footer {
   background-color: #001246; /* NationScope Navy */
   color: #ffffff;
-  padding: 80px 40px 20px 40px;
   font-family: 'Inter', sans-serif;
   border-top: 5px solid #d10000; /* Red accent top border */
 }
 
 .footer-content {
-  max-width: 1200px;
-  margin: 0 auto;
+  margin-left: 1rem;
   display: grid;
   grid-template-columns: 1.5fr 1fr 1fr 1.5fr;
-  gap: 40px;
+  gap: 60px;
 }
 
 /* BRANDING */
@@ -131,19 +129,31 @@
 }
 
 @media (min-width: 768px) {
-.ns-footer {
-    margin-left: 5rem;
-}
+  .footer-content {
+    gap: 190px;
+    margin-left: 5.5rem;
+  }
+
 }
 
-@media (min-width: 1024px) {
-.ns-footer {
-    margin-left: 6.5rem;
-}
+@media (max-width: 375px) {
+    .footer-content {
+      gap: 20px;
+    }
 }
 
-@media (min-width: 1440px) {
-.ns-footer {
+@media (min-width: 1000px) {
+  .footer-content {
+    gap: 250px;
+    margin-left: 7.5rem;
+  }
+
+}
+
+@media (min-width: 1300px) {
+  .footer-content {
+    gap: 300px;
     margin-left: 9.5rem;
-}
+  }
+
 }

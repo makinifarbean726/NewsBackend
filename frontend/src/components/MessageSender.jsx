@@ -35,7 +35,7 @@ function MessageSender() {
         <div className="messenger-panel">
           <div className="messenger-header">
             <h4>Editor Inbox</h4>
-            <p>{username ? `ID: ${username}` : "Secure Guest Channel"}</p>
+            <p>{username ? `Name: ${username}` : "Secure Guest Channel"}</p>
           </div>
           
           <textarea
@@ -51,7 +51,7 @@ function MessageSender() {
             onClick={sendMessage} 
             disabled={loading || !content.trim()}
           >
-            {loading ? <div className="messenger-spinner" /> : "Transmit Report"}
+            {loading ? <div className="messenger-spinner" /> : "Send message"}
           </button>
         </div>
       )}

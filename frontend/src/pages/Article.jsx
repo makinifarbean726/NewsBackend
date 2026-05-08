@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import api from "../api/axios";
 import { useParams, useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar"; 
+import MessageSender from "../components/MessageSender";
 import "./Article.css";
 
 const Article = () => {
@@ -82,7 +83,7 @@ const Article = () => {
 
       <main className="article-content-container">
         <header className="article-view-header">
-          <div className="category-tag">Official Report</div>
+          <div className="category-tag">Full Report</div>
           <h1 className="article-view-title">{article.title}</h1>
           
           <div className="article-view-meta">
@@ -147,6 +148,7 @@ const Article = () => {
           </button>
         )}
       </main>
+      <MessageSender />
     </div>
   );
 };

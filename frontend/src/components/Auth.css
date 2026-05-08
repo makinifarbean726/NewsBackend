@@ -1,0 +1,161 @@
+/* Layout Wrapper */
+.auth-wrapper {
+  position: fixed;
+  display: inline-block;
+  font-family: 'Inter', sans-serif;
+  bottom: 15%;
+    left: 8%;
+    z-index: 1;
+}
+
+/* The Blue Circle Button */
+.auth-circle-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: none;
+  background-color: #0056b3; /* Theme Blue */
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.auth-circle-btn:hover {
+  background-color: #004494;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.auth-circle-btn.active {
+  background-color: #003366;
+  transform: scale(0.92);
+}
+
+.auth-svg-icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* The White Dropdown Menu */
+.auth-dropdown {
+  position: absolute;
+  bottom: 220%;
+    left: 10%;
+  width: 240px;
+  background: #ffffff;
+  border: 1px solid #e1e4e8;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  padding: 20px;
+  animation: slideIn 0.2s ease-out;
+}
+
+.auth-content h3 {
+  margin: 0 0 6px 0;
+  color: #003366; /* Deep Blue text */
+  font-size: 1.1rem;
+}
+
+.auth-content p {
+  font-size: 0.85rem;
+  color: #555;
+  margin-bottom: 18px;
+  line-height: 1.4;
+}
+
+/* Button Actions */
+.auth-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.btn-login, .btn-signup {
+  width: 100%;
+  padding: 11px;
+  border-radius: 6px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: filter 0.2s;
+}
+
+/* Log In - Light Blueish Gray */
+.btn-login {
+  background: #f0f4f8;
+  color: #0056b3;
+}
+
+/* Sign Up - Bold Red */
+.btn-signup {
+  background: #d32f2f; /* Theme Red */
+  color: white;
+}
+
+.btn-login:hover, .btn-signup:hover {
+  filter: brightness(0.92);
+}
+
+/* Visual Divider */
+.divider {
+  display: flex;
+  align-items: center;
+  color: #ccc;
+  font-size: 0.75rem;
+  margin: 4px 0;
+}
+
+.divider::before, .divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #eee;
+}
+
+.divider span {
+  padding: 0 10px;
+}
+
+/* Animations */
+@keyframes slideIn {
+  from { 
+    opacity: 0; 
+    transform: translateY(-8px) scale(0.98); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0) scale(1); 
+  }
+}
+
+@media (min-width: 768px) {
+    .auth-wrapper {
+        left: 15%;
+    }
+
+}
+
+@media (min-width: 1000px) {
+    .auth-wrapper {
+        bottom: 0%;
+    }
+
+}
+
+@media (min-width: 1000px) {
+    .auth-wrapper {
+        bottom: 11%;
+    }
+
+}
+
+@media (min-width: 1200px) {
+    .auth-wrapper {
+        bottom: 8%;
+    }
+
+}

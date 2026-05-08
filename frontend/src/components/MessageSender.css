@@ -1,7 +1,7 @@
 .messenger-wrapper {
   position: fixed;
-  bottom: 30px;
-  right: 30px;
+  bottom: 15%;
+  right: 15%;
   z-index: 2100; /* Higher than sidebar toggle */
   display: flex;
   flex-direction: column;
@@ -33,11 +33,12 @@
 
 /* The Message Panel */
 .messenger-panel {
-  width: 320px;
+  width: 300px;
   background: white;
   border-radius: 16px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
   margin-bottom: 15px;
+  margin-left: 5rem;
   overflow: hidden;
   animation: slideUp 0.3s ease-out;
   border: 1px solid rgba(0, 18, 70, 0.1);
@@ -67,8 +68,8 @@
 
 /* Input Area */
 .messenger-input {
-  width: 100%;
-  padding: 15px;
+  width: 80%;
+  padding: 5px;
   border: none;
   border-bottom: 1px solid #f1f5f9;
   resize: none;

@@ -31,17 +31,6 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* NAVIGATION COLUMN */}
-        <div className="footer-column">
-          <h3>Quick Links</h3>
-          <ul>
-            <li onClick={() => navigate('/')}>Home</li>
-            <li onClick={() => navigate('/search?q=latest')}>Latest News</li>
-            <li onClick={() => navigate('/categories')}>Browse Topics</li>
-            <li>Terms of Service</li>
-          </ul>
-        </div>
-
         {/* SUPPORT COLUMN */}
         <div className="footer-column">
           <h3>Help & Support</h3>
@@ -51,16 +40,6 @@ const Footer = () => {
             <li>Privacy Policy</li>
             <li>Advertising</li>
           </ul>
-        </div>
-
-        {/* NEWSLETTER/EDITABLE SECTION */}
-        <div className="footer-column newsletter">
-          <h3>Stay Informed</h3>
-          <p>Join our newsletter for weekly deep-dives.</p>
-          <div className="footer-input-group">
-            <input type="email" placeholder="Email address" />
-            <button className="footer-btn">Join</button>
-          </div>
         </div>
 
       </div>

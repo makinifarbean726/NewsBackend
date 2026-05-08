@@ -3,7 +3,9 @@ import api from "../api/axios";
 import { useNavigate } from "react-router-dom";
 import MessageSender from "../components/MessageSender";
 import SearchBar from "../components/SearchBar";
+import Auth from "../components/Auth";
 import fallbackImg from "../assets/WhatsApp Image 2026-04-28 at 10.50.40.jpeg";
+import logoImg from "../assets/today.jpeg";
 import "./Home.css";
 
 function Home() {
@@ -89,18 +91,14 @@ function Home() {
           {mobileMenuOpen && (
             <div className="ui-overlay" onClick={() => setMobileMenuOpen(false)} />
           )}
-
+          <Auth />
           <main className="main-layout">
             
             {/* 1. TOP NAVIGATION HEADER */}
             <header className="navbar">
               <div className="navbar__brand" onClick={() => navigate("/")}>
-                <img src={fallbackImg} alt="NationScope Logo" className="navbar__logo" />
                 <div className="navbar__title-group">
-                  <h1 className="navbar__title">
-                    Nation<span>Scope</span>News
-                  </h1>
-                  <p className="navbar__motto">BEYOND THE HEADLINES</p>
+                  <img src={logoImg} alt="NationScope Logo" className="navbar-logo-title" />
                 </div>
               </div>
                 <div className="navbar_row">

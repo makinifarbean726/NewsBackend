@@ -245,7 +245,7 @@
 
 .floating-edit-btn {
   position: fixed;
-  bottom: 30px;
+  bottom: 50%;
   right: 30px;
   width: 60px;
   height: 60px;
@@ -301,6 +301,6 @@
 
 @media (min-width: 768px) {
   .article-content-container {
-    margin-left: 4rem
+    margin-left: 5rem
   }
   }

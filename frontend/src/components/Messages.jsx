@@ -1,19 +1,14 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
+import "./Messages.css"; // Import the CSS file
 
 function Messages() {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // =========================
-  // ROLE FROM LOCAL STORAGE
-  // =========================
   const role = localStorage.getItem("role");
   const isAdmin = role === "admin";
 
-  // =========================
-  // FETCH ALL MESSAGES
-  // =========================
   const fetchMessages = async () => {
     try {
       const res = await api.get("/messages/admin/all");
@@ -27,19 +22,13 @@ function Messages() {
     if (isAdmin) fetchMessages();
   }, [isAdmin]);
 
-  // =========================
-  // DELETE MESSAGE
-  // =========================
   const deleteMessage = async (id) => {
     const confirmDelete = window.confirm("Delete this message?");
     if (!confirmDelete) return;
 
     setLoading(true);
-
     try {
       await api.delete(`/messages/${id}`);
-
-      // remove instantly from UI
       setMessages((prev) => prev.filter((m) => m.id !== id));
     } catch (err) {
       console.error("DELETE ERROR:", err.response?.data || err);
@@ -49,55 +38,53 @@ function Messages() {
     }
   };
 
-  // =========================
-  // PROTECT PAGE
-  // =========================
   if (!isAdmin) {
-    return <p>Access denied</p>;
+    return (
+      <div className="access-denied">
+        <p>🚫 Access denied. Admins only.</p>
+      </div>
+    );
   }
 
   return (
-    <div style={{ padding: 20 }}>
-      <h2>📩 Admin Messages</h2>
+    <div className="messages-container">
+      <header className="messages-header">
+        <h2>📩 Admin Messages</h2>
+        <span className="message-count">{messages.length} Total</span>
+      </header>
 
-      {messages.length === 0 && <p>No messages yet</p>}
-
-      {messages.map((m) => (
-        <div
-          key={m.id}
-          style={{
-            border: "1px solid #ddd",
-            padding: 10,
-            marginBottom: 10,
-            borderRadius: 8,
-          }}
-        >
-          <p style={{ whiteSpace: "pre-line" }}>
-            {m.content}
-          </p>
-
-          <small>
-            {new Date(m.created_at).toLocaleString()}
-          </small>
-
-          <br />
-
-          <button
-            onClick={() => deleteMessage(m.id)}
-            disabled={loading}
-            style={{
-              marginTop: 10,
-              background: "red",
-              color: "white",
-              border: "none",
-              padding: "5px 10px",
-              cursor: "pointer",
-            }}
-          >
-            Delete
-          </button>
+      {messages.length === 0 ? (
+        <div className="empty-state">
+          <p>No messages yet. Check back later!</p>
         </div>
-      ))}
+      ) : (
+        <div className="messages-grid">
+          {messages.map((m) => (
+            <div key={m.id} className="message-card">
+              <div className="message-body">
+                <p className="message-content">{m.content}</p>
+              </div>
+              
+              <div className="message-footer">
+                <span className="timestamp">
+                  {new Date(m.created_at).toLocaleString([], {
+                    dateStyle: 'medium',
+                    timeStyle: 'short'
+                  })}
+                </span>
+                
+                <button
+                  className="delete-btn"
+                  onClick={() => deleteMessage(m.id)}
+                  disabled={loading}
+                >
+                  {loading ? "..." : "Delete"}
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
