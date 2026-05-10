@@ -63,7 +63,9 @@ const Login = () => {
             
             <div className="login-welcome-msg">
               <h3>Stay Informed.</h3>
-              <p>Log in to access news articles, and the latest global insights.</p>
+              <p>Your trusted news experience awaits. Stay connected to the latest
+                stories, insights, and conversations shaping today’s world.
+              </p>
             </div>
           </div>
         </div>

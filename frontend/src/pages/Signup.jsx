@@ -85,7 +85,10 @@ function Signup() {
             <p className="tagline">Beyond the Headlines</p>
             <div className="welcome-text">
               <h3>Join the Community</h3>
-              <p>Get personalized news, and join the conversation on the topics that matter most.</p>
+              <p>Join a growing community that stays informed beyond the headlines.
+                Get real-time updates, breaking stories, and in-depth reporting
+                from politics, business, technology, sports, and more.
+              </p>
             </div>
             <div className="brand-accent-lines">
               <div className="accent-red"></div>

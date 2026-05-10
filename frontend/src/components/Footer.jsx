@@ -1,5 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FaFacebookF } from "react-icons/fa";
+import { MdEmail } from "react-icons/md";
+import { FaPhoneAlt } from "react-icons/fa";
 import './Footer.css';
 
 const Footer = () => {
@@ -13,35 +16,35 @@ const Footer = () => {
         {/* BRAND COLUMN */}
         <div className="footer-column brand-info">
           <h2 className="footer-logo" onClick={() => navigate('/')}>
-            Nation<span>Scope</span>
+            Nation<span>Scope</span>News
           </h2>
           <p className="footer-tagline">
-            Delivering deep-dive journalism and real-time reports from across the nation.
+            Catch up with the latest developments, trending discussions,
+            and live updates happening around you right now.
           </p>
           <div className="social-links">
-            <a href="https://facebook.com" target="_blank" rel="noreferrer" aria-label="Facebook">
-              <i className="fab fa-facebook-f"></i>
+            <a
+              href="https://www.facebook.com/share/1DbnczVPCS/"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Facebook"
+              className="social-item"
+            >
+              <FaFacebookF />
+              <span>Facebook</span>
             </a>
-            <a href="mailto:contact@nationscope.com" aria-label="Email">
-              <i className="fas fa-envelope"></i>
-            </a>
-            <a href="tel:+1234567890" aria-label="Phone">
-              <i className="fas fa-phone-alt"></i>
-            </a>
+              <p>nationscopenewsafrica@gmail.com</p>
+              <p>+254 717 315077</p>
+
           </div>
         </div>
 
         {/* SUPPORT COLUMN */}
-        <div className="footer-column">
-          <h3>Help & Support</h3>
-          <ul>
-            <li>Contact Editors</li>
-            <li>Press Room</li>
-            <li>Privacy Policy</li>
-            <li>Advertising</li>
-          </ul>
+        <div className="footer-contact">
+          <h4>Head Office</h4>
+          <p>Kapsoya, Eldoret</p>
+          <p>Kenya</p>
         </div>
-
       </div>
 
       <div className="footer-bottom">
